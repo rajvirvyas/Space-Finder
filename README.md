@@ -19,7 +19,7 @@ Next, make sure you modify the .env file to have the correct information for dat
 Make sure the database is migrated. 
 
 ```bash
-npx primsa migrate dev
+npx prisma migrate dev
 ```
 
 Finally, run the development server:
