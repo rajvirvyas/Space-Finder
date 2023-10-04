@@ -33,3 +33,36 @@ export async function POST(request) {
   return NextResponse.json({error: 'not signed in'}, {status: 403});
 }
 
+export async function PUT(request) {
+  const loggedInData = await checkLoggedIn();
+  if (loggedInData.loggedIn) {
+    const { value } = await request.json();
+    console.log(value)
+    let newDone = !value.done;
+    const todo = await prisma.toDo.update({
+      where: {
+        id: value.id
+      },
+      data: {
+        done: newDone
+      }
+    });
+    return NextResponse.json(todo);
+  }
+  return NextResponse.json({error: 'not signed in'}, {status: 403});
+}
+
+export async function DELETE(request) {
+  const loggedInData = await checkLoggedIn();
+  if (loggedInData.loggedIn) {
+    const { todoID } = await request.json();
+    const todo = await prisma.toDo.delete({
+        where: {
+          id: todoID
+        }
+    });
+    console.log(todo);
+    return NextResponse.json(todo);
+  }
+  return NextResponse.json({error: 'not signed in'}, {status: 403});
+}
