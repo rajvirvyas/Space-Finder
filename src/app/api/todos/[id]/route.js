@@ -5,6 +5,7 @@ import { checkLoggedIn } from "@/lib/auth";
 export async function PUT(request, { params }) {
    const loggedInData = await checkLoggedIn();
    const id = parseInt(params.id);
+   console.log(id)
    if (loggedInData.loggedIn && id) {
     const { value, done } = await request.json();
     console.log("finding", {id, done, value, ownerId: loggedInData.user.id});

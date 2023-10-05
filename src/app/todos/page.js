@@ -34,17 +34,17 @@ export default function ToDos() {
         }
     }
 
-    function removeTodo({ index }) {
-        fetch("api/todos", { method: "delete", body: JSON.stringify({todoID: todos[index].id}) } ).then((response) => {
+    function removeTodo(todoID) {
+        fetch(`api/todos/${todoID}`, { method: "delete" } ).then((response) => {
             return response.json().then((newTodo) => {
                 console.log(newTodo);
             });
         });
-        setTodos(todos.filter((v,idx) => idx!==index));
+        setTodos(todos.filter((v) => v.id!==todoID));
     }
 
     function checkItem(item) {
-        fetch("api/todos", { method: "put", body: JSON.stringify({value: item}) } ).then((response) => {
+        fetch(`api/todos/${item.id}`, { method: "put", body: JSON.stringify({value: item.value, done: !item.done}) } ).then((response) => {
             return response.json().then((newTodo) => {
                 console.log(newTodo);
             });
@@ -70,7 +70,7 @@ export default function ToDos() {
 
     const toDoItems = isLoading ? loadingItems : todos.map((todo, idx) => {
         return <ListItem key={idx} secondaryAction={
-            <IconButton edge="end" onClick={() => removeTodo({index: idx})}><DeleteForever/></IconButton>   
+            <IconButton edge="end" onClick={() => removeTodo(todo.id)}><DeleteForever/></IconButton>   
         }>  
             <ListItemButton onClick={() => checkItem(todo)}>
                 <ListItemIcon>
