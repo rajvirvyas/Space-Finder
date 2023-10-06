@@ -36,10 +36,10 @@ export default function ToDos() {
     }
 
     function removeTodo({ index }) {
-        setTodos(todos.filter((v,idx) => idx!==index))
+        setTodos(todos.filter((v,idx) => idx!==index));
         if (todos) {
             const cur_id = todos[index].id;
-            fetch("api/todos/" + cur_id, { method: "delete" }).then(response => response.json());
+            fetch("api/todos/" + cur_id, { method: "delete" }).then((response) => response.ok && response.json());
         }
     }
 
@@ -47,9 +47,9 @@ export default function ToDos() {
         if (todos) {
             const cur_id = todos[index].id;
             const checked = todos[index].done;
-            todos[index].done = !checked;
             fetch("api/todos/" + cur_id, { method: "put", body: JSON.stringify({done: !checked}) }).then((response) => {
                 return response.json().then(() => {
+                    todos[index].done = !checked;
                     setTodos([...todos]);
                 });
             });
