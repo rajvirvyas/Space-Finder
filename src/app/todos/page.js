@@ -36,10 +36,13 @@ export default function ToDos() {
     }
 
     function removeTodo({ index }) {
-        setTodos(todos.filter((v,idx) => idx!==index));
         if (todos) {
             const cur_id = todos[index].id;
-            fetch("api/todos/" + cur_id, { method: "delete" }).then((response) => response.ok && response.json());
+            fetch("api/todos/" + cur_id, { method: "delete" }).then((response) => response.ok && response.json()).then(
+                () => {
+                    setTodos(todos.filter((v,idx) => idx!==index));
+                }
+            );
         }
     }
 
