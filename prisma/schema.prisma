@@ -23,7 +23,8 @@ model studySpace {
   id Int @id @default(autoincrement())
   name String
   building String
-  location String[]
+  longitude Float
+  latitude Float
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
   capacity Int
