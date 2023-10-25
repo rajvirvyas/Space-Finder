@@ -31,6 +31,7 @@ model studySpace {
   busyness Float
   comments comment[]
   reservations reservation[]
+  img String
 }
 
 model comment {
