@@ -16,6 +16,7 @@ model User {
   password String
   studySpaces studySpace[]
   comments comment[]
+  reservations reservation[]
 }
 
 model studySpace {
@@ -29,6 +30,7 @@ model studySpace {
   rating Float
   busyness Float
   comments comment[]
+  reservations reservation[]
 }
 
 model comment {
@@ -40,3 +42,10 @@ model comment {
   studySpaceId Int
 }
 
+model reservation {
+  id Int @id @default(autoincrement())
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+  studySpace studySpace @relation(fields: [studySpaceId], references: [id])
+  studySpaceId Int
+}
