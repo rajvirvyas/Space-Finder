@@ -30,8 +30,7 @@ export default function ToDos() {
                     setTodos([...todos, newTodo]);
                     setNewTodo('');
                 });
-            });
-            
+            });  
         }
     }
 
@@ -72,9 +71,9 @@ export default function ToDos() {
 
     const toDoItems = isLoading ? loadingItems : todos.map((todo, idx) => {
         return <ListItem key={idx} secondaryAction={
-            <IconButton edge="end" onClick={() => removeTodo({index: idx})}><DeleteForever/></IconButton>   
+            <IconButton edge="end" onClick={() => removeTodo(todo.id)}><DeleteForever/></IconButton>   
         }>  
-            <ListItemButton>
+            <ListItemButton onClick={() => checkItem(todo)}>
                 <ListItemIcon>
                     <Checkbox checked={todo.done} onClick={() => updateTodo({index: idx})} disableRipple/>
                 </ListItemIcon>

@@ -1,5 +1,4 @@
 'use client'
-
 import { usePathname } from 'next/navigation'
 import { Box, Button } from '@mui/material';
 import Link from 'next/link';
