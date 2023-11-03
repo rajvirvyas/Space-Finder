@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
-import AdbIcon from '@mui/icons-material/Adb';
+import SavedSearchIcon from '@mui/icons-material/SavedSearch';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import NavBar from './NavBar';
@@ -15,8 +15,18 @@ import Signup from './Signup';
 import { useSession } from 'next-auth/react';
 import { Button } from '@mui/material';
 import { signOut } from "next-auth/react"
+import { blueGrey } from '@mui/material/colors';
 
-const theme = createTheme({});
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: blueGrey[800],
+      light: blueGrey[200],
+      dark: '#1565c0',
+      contrastText: blueGrey[100],
+    }
+  }
+});
 
 export default function RootLayout({ children, title }) {
 
@@ -25,7 +35,10 @@ export default function RootLayout({ children, title }) {
   let loginSection;
 
   if (status === 'authenticated') {
-    loginSection = <Button variant="outlined" color="inherit" onClick={() => signOut()}>Sign Out</Button>;
+    loginSection = <>
+    <Button variant="outlined" color="inherit" href='/profile'>Profile</Button>
+    <Button variant="outlined" color="inherit" onClick={() => signOut()}>Sign Out</Button>
+    </>;
   } else {
     loginSection = <>
       <Login/>
@@ -35,12 +48,12 @@ export default function RootLayout({ children, title }) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', boxShadow: 1 }}>
         <CssBaseline />
         <AppBar position="static">
           <Container maxWidth="xl">
             <Toolbar disableGutters>
-              <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+              <SavedSearchIcon fontSize='large'/>  
               <Typography
                 variant="h6"
                 noWrap
@@ -49,9 +62,9 @@ export default function RootLayout({ children, title }) {
                 sx={{
                   mr: 2,
                   display: { xs: 'none', md: 'flex' },
-                  fontFamily: 'monospace',
+                  fontFamily: 'Arial',
                   fontWeight: 700,
-                  letterSpacing: '.3rem',
+                  letterSpacing: '.1rem',
                   color: 'inherit',
                   textDecoration: 'none',
                 }}
@@ -61,6 +74,8 @@ export default function RootLayout({ children, title }) {
               <NavBar />
               <Box sx={{ flexGrow: 0 }}>
                 <Stack direction='row' spacing={2}>
+                  <Button color='inherit'>Contact Us</Button>
+                  <Button color='inherit'>Find a Spot</Button>
                   {loginSection}
                 </Stack>
               </Box>

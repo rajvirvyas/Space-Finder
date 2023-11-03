@@ -1,19 +1,21 @@
-import Image from 'next/image'
+"use client"
+import Filter from './components/filter'
+import StudyCard from './components/studycard'
+import { Box, Grid } from '@mui/material'
 
 export default function Home() {
   return (
     <>
-      <h1>Welcome to CSC 307</h1>
-      <p>
-        This application is a Next.js application. It already contains a way to login and sign-up as well as a rough ToDo list application as a way to demonstrate create and update of a todo. 
-      </p>
-      <h2>Documentation</h2>
-      <ul>
-        <li>NextJS: <a href="https://nextjs.org/docs">https://nextjs.org/docs</a></li>
-        <li>Material UI: <a href="https://mui.com/material-ui/getting-started/">https://mui.com/material-ui/getting-started/</a></li>
-        <li>Prisma: <a href="https://www.prisma.io/docs/getting-started">https://www.prisma.io/docs/getting-started</a></li>
-      </ul>
-      <h2></h2>
+      <Box sx={{ display: 'flex', justifyContent: "space-between", p: 2 }}>
+        <Filter />
+        <Box sx={{ display: "flex", justifyContent: 'flex-start', flexWrap: 'wrap'}}>
+          <StudyCard studyName={"Study 1"} liveStatus={"Busy AF"} rating={4.5}/>
+          <StudyCard studyName={"Study 2"} liveStatus={"Busy AF"} rating={4.5}/>
+          <StudyCard studyName={"Study 3"} liveStatus={"Busy AF"} rating={4.5}/>
+          <StudyCard studyName={"Study 4"} liveStatus={"Busy AF"} rating={4.5}/>
+        </Box>
+      </Box>
+      
     </>
   )
 }

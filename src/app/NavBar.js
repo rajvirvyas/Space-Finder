@@ -1,5 +1,4 @@
 'use client'
-
 import { usePathname } from 'next/navigation'
 import { Box, Button } from '@mui/material';
 import Link from 'next/link';
@@ -8,7 +7,7 @@ export default function NavBar() {
   const pathname = usePathname();
   const links = [
     { path: '/', name: 'Home' }, 
-    { path: '/todos', name: 'ToDos' }
+    { path: '/create', name: 'Create' }
   ];
 
   return (
@@ -18,7 +17,7 @@ export default function NavBar() {
         return (
           <Button component={Link}
                   href={l.path}
-                  sx={{ my: 2, color: 'white', display: 'block', textDecoration: (isActive ? 'underline' : 'inherit') }}
+                  sx={{ my: 2, color: 'inherit', display: 'block', textDecoration: (isActive ? 'underline' : 'inherit') }}
                   key={l.path}
           >{l.name}</Button>
         )
