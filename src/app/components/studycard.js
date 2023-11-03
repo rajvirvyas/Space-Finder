@@ -9,10 +9,12 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import CardMedia from '@mui/material/CardMedia';
 import { useState } from 'react';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 export default function StudyCard(props) {
     const { studyName, liveStatus, rating } = props;
     const [ratingState, setRatingState] = useState(rating);
+    const [isStarred, setIsStarred] = useState(false);
 
     function increaseRating() {
         setRatingState(ratingState + 0.5);
@@ -21,14 +23,21 @@ export default function StudyCard(props) {
     function decreaseRating() {
         setRatingState(ratingState - 0.5);
     }
-  
+
+    function toggleStar() {
+        setIsStarred(!isStarred);
+    }
+
     return (
-      <Card sx={{ mx: 6, mb: 4, bgcolor: '#dfebe9', boxShadow: 5, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <Card sx={{ mx: 6, mb: 4, bgcolor: '#dfebe9', boxShadow: 6, display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
         <CardContent>
+            <Button sx={{ position: 'absolute', top: 20, left: 10, zIndex: 1, color: 'black',}} onClick={toggleStar}>
+                <StarBorderIcon sx={{fontSize: 30}} />
+            </Button>
               <CardMedia
                     component="img"
                     sx={{ borderRadius: 2, boxShadow: 6, display: { xs: 'none', sm: 'block' } }}
-                    image={"https://picsum.photos/350/200"}
+                    image={"https://picsum.photos/300/200"}
                     alt={"study"}
                 />
               <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'left', p: 2}}>
