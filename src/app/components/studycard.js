@@ -23,7 +23,7 @@ export default function StudyCard(props) {
     }
   
     return (
-      <Card sx={{ m: 4, bgcolor: '#dfebe9', boxShadow: 5, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <Card sx={{ mx: 6, mb: 4, bgcolor: '#dfebe9', boxShadow: 5, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <CardContent>
               <CardMedia
                     component="img"
