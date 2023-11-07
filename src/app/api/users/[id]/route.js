@@ -7,9 +7,9 @@ export async function PUT(request, { params }) {
   const loggedInData = await checkLoggedIn();
   const id = +params.id;
   if (loggedInData.loggedIn && id) {
-    const { username, email, password, studySpaces, comments, reservations } = await request.json();
+    const { username, email, password, bio, school, studySpaces, comments, reservations } = await request.json();
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("finding", {id, username, email, password, studySpaces, comments, reservations});
+    console.log("finding", {id, username, email, password, bio, school, studySpaces, comments, reservations});
     try {
       const u = await prisma.user.update({
         where: {
@@ -19,6 +19,8 @@ export async function PUT(request, { params }) {
           username,
           email,
           password: hashedPassword,
+          bio,
+          school,
           studySpaces,
           comments,
           reservations

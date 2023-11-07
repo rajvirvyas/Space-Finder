@@ -1,9 +1,11 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { Avatar } from '@mui/material';
 import { Typography } from '@mui/material';
 import StudyCard from '../components/studycard';
+
+import { checkLoggedIn } from '@/lib/auth';
 
 export default function Profile() {
     const [recentSpots, setRecentSpots] = useState([
@@ -21,6 +23,14 @@ export default function Profile() {
         }
     ]);
 
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+        fetch('/api/users', { method: 'get' })
+            .then((response) => response.ok && response.json())
+            .then(data => setUser(data));
+    }, []);
+
     return (
         <>
         <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', mb: -6 }}>
@@ -29,13 +39,13 @@ export default function Profile() {
             </Box>
             <Box sx={{ p: 10 }}>
                 <Typography variant="h4" gutterBottom>
-                    John Doe
+                    {user.username}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                    Bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, sapien quis bibendum bibendum, elit sapien bibendum ipsum, vel bibendum sapien sapien vel sapien.
+                    Bio: {user.bio}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                    School: Cal Poly SLO
+                    School: {user.school}
                 </Typography>
             </Box>
         </Box>
