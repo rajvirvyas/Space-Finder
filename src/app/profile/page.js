@@ -5,8 +5,6 @@ import { Avatar } from '@mui/material';
 import { Typography } from '@mui/material';
 import StudyCard from '../components/studycard';
 
-import { checkLoggedIn } from '@/lib/auth';
-
 export default function Profile() {
     const [recentSpots, setRecentSpots] = useState([
         {
