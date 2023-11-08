@@ -1,9 +1,11 @@
 "use client"
 import React from 'react'
-import { Button, Box } from '@mui/material';
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { useState } from 'react';
+import { Button, Box, Typography } from '@mui/material';
+import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 
 function MyComponent() {
+    const [open, setOpen] = useState(false);
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: "AIzaSyCszSIw3d3Q_UQkZrCTt50byd9MIoBqsTQ"
@@ -36,6 +38,10 @@ function MyComponent() {
         });
     }, []);
 
+    function toggleOpen() {
+        setOpen(!open);
+    }
+
     const findLocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
@@ -55,17 +61,33 @@ function MyComponent() {
 
         return isLoaded ? (
                 <GoogleMap
-                    mapContainerStyle={{width: '800px', height: '500px'}}
+                    mapContainerStyle={{width: '100%', height: '85vh'}}
                     center={center}
                     zoom={15}
                     onLoad={onLoad}
                     onUnmount={onUnmount}
                     onDblClick={onMapDoubleClick}
+                    clickableIcons={false}
+                    options={{
+                        styles: [
+                            {
+                                elementType: 'labels.icon',
+                                stylers: [{visibility: 'off'}]
+                            }
+                        ]
+                    }}
                 >
                     <Box sx={{display: 'flex', justifyContent: 'center', mt: 2}}>
                             <Button onClick={findLocation} sx={{backgroundColor: 'white', boxShadow: 2}}>Find Me</Button>
                     </Box>
-                    <Marker position={markerPosition} title='My Marker!'></Marker>
+                    <Marker onClick={toggleOpen} position={center} title='My Marker!'>
+                        {open && <InfoWindow onCloseClick={() => toggleOpen()}>
+                                <Box>
+                                    <Typography>Study Spot 1: Very Busy</Typography>
+                                    <Typography>Lat: 1.23, Long: 45.67</Typography>
+                                </Box>
+                            </InfoWindow>}
+                    </Marker>
                 </GoogleMap>
         ) : <></>
     }

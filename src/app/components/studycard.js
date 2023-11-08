@@ -10,7 +10,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import CardMedia from '@mui/material/CardMedia';
 import { useState } from 'react';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-maps/api';
 
 export default function StudyCard(props) {
     const { studyName, liveStatus, rating } = props;
@@ -18,6 +18,7 @@ export default function StudyCard(props) {
     const [isStarred, setIsStarred] = useState(false);
     const [map, setMap] = useState(null)
     const [center, setCenter] = useState({lat: 35.305, lng: -120.6625})
+    const [open, setOpen] = useState(false);
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
@@ -48,6 +49,10 @@ export default function StudyCard(props) {
         setIsStarred(!isStarred);
     }
 
+    function toggleOpen() {
+        setOpen(!open);
+    }
+
     return (
       <Card sx={{ mx: 3, mb: 4, bgcolor: '#dfebe9', boxShadow: 6, display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
         <CardContent>
@@ -57,22 +62,29 @@ export default function StudyCard(props) {
               <CardMedia
                     component="img"
                     sx={{ borderRadius: 2, boxShadow: 6, display: { xs: 'none', sm: 'block' } }}
-                    image={"https://picsum.photos/400/200"}
+                    image={"https://picsum.photos/350/200"}
                     alt={"study"}
                 />
-                <Box sx={{mt: 2}}>
-                {isLoaded ? (
-                <GoogleMap
-                    mapContainerStyle={{width: '400px', height: '200px'}}
-                    center={center}
-                    zoom={15}
-                    onLoad={onLoad}
-                    onUnmount={onUnmount}
-                >
-                    <Marker position={center} title='My Marker!'></Marker>
+                {/* <Box sx={{mt: 2}}>
+                    {isLoaded ? (
+                    <GoogleMap
+                        mapContainerStyle={{width: '400px', height: '200px'}}
+                        center={center}
+                        zoom={15}
+                        onLoad={onLoad}
+                        onUnmount={onUnmount}
+                    >
+                    <Marker onClick={toggleOpen} position={center} title='My Marker!'>
+                        {open && <InfoWindow onCloseClick={() => toggleOpen()}>
+                                <Box>
+                                    <Typography>{studyName}: {liveStatus}</Typography>
+                                    <Typography>Lat: {center.lat}, Long: {center.lng}</Typography>
+                                </Box>
+                            </InfoWindow>}
+                    </Marker>
                 </GoogleMap>
-            ) : <></>}
-            </Box>
+                ) : <></>}
+                </Box> */}
               <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'left', p: 2}}>
                   <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                       <Typography variant="h5" component="div">

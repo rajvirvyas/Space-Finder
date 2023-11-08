@@ -7,7 +7,6 @@ export default function NavBar() {
   const pathname = usePathname();
   const links = [
     { path: '/', name: 'Home' }, 
-    { path: '/create', name: 'Create' },
     { path: '/map-tester', name: 'Map' },
   ];
 
