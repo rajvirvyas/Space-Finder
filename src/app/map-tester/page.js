@@ -67,7 +67,6 @@ function MyComponent() {
                     onLoad={onLoad}
                     onUnmount={onUnmount}
                     onDblClick={onMapDoubleClick}
-                    clickableIcons={false}
                     options={{
                         styles: [
                             {
@@ -80,7 +79,7 @@ function MyComponent() {
                     <Box sx={{display: 'flex', justifyContent: 'center', mt: 2}}>
                             <Button onClick={findLocation} sx={{backgroundColor: 'white', boxShadow: 2}}>Find Me</Button>
                     </Box>
-                    <Marker onClick={toggleOpen} position={center} title='My Marker!'>
+                    <Marker onClick={toggleOpen} position={markerPosition} title='My Marker!'>
                         {open && <InfoWindow onCloseClick={() => toggleOpen()}>
                                 <Box>
                                     <Typography>Study Spot 1: Very Busy</Typography>
