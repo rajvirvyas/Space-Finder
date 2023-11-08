@@ -5,45 +5,16 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Box, List, ListItem } from '@mui/material';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import CardMedia from '@mui/material/CardMedia';
 import { useState } from 'react';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
+import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-maps/api';
 
 export default function StudyCard(props) {
     const { studyName, liveStatus, rating } = props;
-    const [ratingState, setRatingState] = useState(rating);
     const [isStarred, setIsStarred] = useState(false);
-    const [map, setMap] = useState(null)
-    const [center, setCenter] = useState({lat: 35.305, lng: -120.6625})
     const [open, setOpen] = useState(false);
-
-    const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
-        googleMapsApiKey: "AIzaSyCszSIw3d3Q_UQkZrCTt50byd9MIoBqsTQ"
-    })
-
-    const onLoad = React.useCallback(function callback(map) {
-        // This is just an example of getting and using the map instance!!! don't just blindly copy!
-        const bounds = new window.google.maps.LatLngBounds(center);
-        map.fitBounds(bounds);
-    
-        setMap(map)
-    }, [center])
-    
-    const onUnmount = React.useCallback(function callback(map) {
-        setMap(null)
-    }, [])
-
-    function increaseRating() {
-        setRatingState(ratingState + 0.5);
-    }
-
-    function decreaseRating() {
-        setRatingState(ratingState - 0.5);
-    }
 
     function toggleStar() {
         setIsStarred(!isStarred);
@@ -57,7 +28,7 @@ export default function StudyCard(props) {
       <Card sx={{ mx: 3, mb: 4, bgcolor: '#dfebe9', boxShadow: 6, display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
         <CardContent>
             <Button sx={{ position: 'absolute', top: 20, left: 10, zIndex: 1, color: 'black',}} onClick={toggleStar}>
-                <StarBorderIcon sx={{fontSize: 30}} />
+                {isStarred ? <BookmarkAddedIcon sx={{fontSize: 30, color: 'white'}} /> : <BookmarkAddIcon sx={{fontSize: 30, color: 'white'}} />}
             </Button>
               <CardMedia
                     component="img"
@@ -98,14 +69,9 @@ export default function StudyCard(props) {
                       </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'row'}}>
-                      <Typography sx={{ mt: 1.5 }} color="text.secondary">
-                          Rating:
+                      <Typography sx={{mt:1.5}} color="text.secondary">
+                          Rating: {rating}
                       </Typography>
-                      <Box sx={{ display: 'flex', flexDirection: 'row'}}>
-                          <Button onClick={increaseRating} sx={{ minWidth: 5, color: 'black'}}><ArrowUpwardIcon /></Button>
-                          <Typography sx={{mt: 1}}>{ratingState}</Typography>
-                          <Button onClick={decreaseRating} sx={{ minWidth: 5, color: 'black'}}><ArrowDownwardIcon /></Button>
-                      </Box>
                   </Box>
                 <Box>
                     <Typography sx={{ mt: 1.5 }} color="text.secondary">

@@ -66,6 +66,7 @@ function MyComponent() {
                     zoom={15}
                     onLoad={onLoad}
                     onUnmount={onUnmount}
+                    disableDoubleClickZoom={true}
                     onDblClick={onMapDoubleClick}
                     options={{
                         styles: [
