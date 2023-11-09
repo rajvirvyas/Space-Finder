@@ -12,16 +12,16 @@ export default function Profile() {
   const [pfp, setPhoto] = useState("/path/to/profile-picture.jpg");
 
   const toggleEditStatus = () => {
-      setIsEditing(!isEditing);
+    setIsEditing(!isEditing);
   };
   const handleNameChange = (e) => {
-      setName(e.target.value);
+    //edit name here
   };
   const handleBioChange = (e) => {
-      setBio(e.target.value);
+    //edit bio here
   };
   const handleSchoolChange = (e) => {
-    setSchool(e.target.value);
+    // edit school here
   };
   const handlePFPChange = (e) => {
     const newImage = e.target.files[0];
@@ -68,11 +68,11 @@ export default function Profile() {
           <Box sx={{ p: 10, width: '50vw', display: 'flex', alignItems: 'left', flexDirection: 'column'}}>
             <TextField 
               fullWidth
-              required
               value={user.username} 
               inputProps={{ maxLength: 30 }}
               onChange={handleNameChange} 
-              helperText="Max 30 characters"
+              label='Name'
+              helperText='Max 30 characters'
             />
             <TextField 
               fullWidth
@@ -80,7 +80,8 @@ export default function Profile() {
               value={user.bio} 
               inputProps={{ maxLength: 500 }}
               onChange={handleBioChange} 
-              helperText="Max 500 characters"
+              label='Bio'
+              helperText='Max 500 characters'
             />
             <TextField 
               fullWidth
@@ -88,7 +89,8 @@ export default function Profile() {
               value={user.school} 
               inputProps={{ maxLength: 100 }}
               onChange={handleSchoolChange} 
-              helperText="Max 100 characters"
+              label='School'
+              helperText='Max 100 characters'
             />
             <Button onClick={toggleEditStatus} >
               Save
