@@ -8,7 +8,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Alert from '@mui/material/Alert';
-import { Box, Typography } from '@mui/material';
 import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
 
 export default function AddSpot() {
@@ -17,7 +16,7 @@ export default function AddSpot() {
   const [ error, setError ] = useState(false);
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: "AIzaSyCszSIw3d3Q_UQkZrCTt50byd9MIoBqsTQ"
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY
   })
 
   const [map, setMap] = useState(null)
@@ -139,7 +138,7 @@ export default function AddSpot() {
                   <Marker position={markerPosition}></Marker>
                 </GoogleMap>
         ) : <></>}  
-        <DialogContentText>Please mark the spot on the map</DialogContentText>
+        <DialogContentText>Please mark (double click) the spot on the map</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>

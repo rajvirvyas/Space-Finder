@@ -86,7 +86,7 @@ export default function StudyCard(props) {
             display: { xs: 'none', sm: 'block' },
             ':hover': { cursor: 'pointer' }
           }}
-          image={"https://picsum.photos/300/200"}
+          image={"https://picsum.photos/325/200"}
           alt={"study"}
           onClick={() => {window.location.href = '/studyspot'}}
         />

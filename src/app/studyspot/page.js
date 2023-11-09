@@ -20,7 +20,7 @@ function StudySpot(props) {
     const [open, setOpen] = useState(false);
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: "AIzaSyCszSIw3d3Q_UQkZrCTt50byd9MIoBqsTQ"
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY
     })
 
     const [map, setMap] = React.useState(null)
