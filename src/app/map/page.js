@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 
-function MyComponent() {
+function Map() {
     const [open, setOpen] = useState(false);
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
@@ -19,6 +19,7 @@ function MyComponent() {
 
     const onLoad = React.useCallback(function callback(map) {
         // This is just an example of getting and using the map instance!!! don't just blindly copy!
+        findLocation();
         const bounds = new window.google.maps.LatLngBounds(center);
         map.fitBounds(bounds);
 
@@ -91,5 +92,5 @@ function MyComponent() {
                 </GoogleMap>
         ) : <></>
     }
-    export default React.memo(MyComponent)
+    export default React.memo(Map)
 

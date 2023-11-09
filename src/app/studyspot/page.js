@@ -12,12 +12,39 @@ import {
   fabClasses,
 } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
-import Avatar from '@mui/material/Avatar';
-import StudyCard from '../components/studycard';
-import Comments from './comments';
-import AmenitiesList from './amenitiesList';
+import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
+import Comments from '../components/comments';
+import AmenitiesList from '../components/amenitiesList';
 
 function StudySpot(props) {
+    const [open, setOpen] = useState(false);
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: "AIzaSyCszSIw3d3Q_UQkZrCTt50byd9MIoBqsTQ"
+    })
+
+    const [map, setMap] = React.useState(null)
+    const [center, setCenter] = React.useState({
+        lat: 35.305,
+        lng: -120.6625
+    })
+
+    const onLoad = React.useCallback(function callback(map) {
+        // This is just an example of getting and using the map instance!!! don't just blindly copy!
+        const bounds = new window.google.maps.LatLngBounds(center);
+        map.fitBounds(bounds);
+
+        setMap(map)
+    }, [center])
+
+    const onUnmount = React.useCallback(function callback(map) {
+        setMap(null)
+    }, [])  
+
+    function toggleOpen() {
+      setOpen(!open);
+  }
+
   const loggedIn = false; // Replace with a field passed through props
 
   return (
@@ -55,20 +82,43 @@ function StudySpot(props) {
           </Paper>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Paper elevation={3}>
-            <Box p={2} sx={{ height: '16.7em', bgcolor: 'grey.500', borderRadius: 1}}>
-              {/* Your map component */}
+            <Box sx={{ boxShadow:3, height: '16.7em', bgcolor: 'grey.500', borderRadius: 1}}>
+              {isLoaded ? (
+                <GoogleMap
+                    mapContainerStyle={{width: '100%', height: '100%'}}
+                    center={center}
+                    zoom={15}
+                    onLoad={onLoad}
+                    onUnmount={onUnmount}
+                    options={{
+                        styles: [
+                            {
+                                elementType: 'labels.icon',
+                                stylers: [{visibility: 'off'}]
+                            }
+                        ]
+                    }}
+                >
+                    <Marker onClick={toggleOpen} position={center}>
+                        {open && <InfoWindow onCloseClick={() => toggleOpen()}>
+                                <Box>
+                                    <Typography>Study Spot 1: Very Busy</Typography>
+                                    <Typography>Lat: 1.23, Long: 45.67</Typography>
+                                </Box>
+                            </InfoWindow>}
+                    </Marker>
+                </GoogleMap>
+        ) : <></>}
             </Box>
-          </Paper>
         </Grid>
       </Grid>
       <Box mt={2} mb={2}>
         <Divider orientation="horizontal" />
       </Box>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+      <Grid container justifyContent={'space-between'} spacing={3}>
+        <Grid item xs={12} sm={4}>
           <Paper elevation={3}>
-            <Box p={2}>
+            <Box sx={{height: "100%"}} p={2}>
               <Typography variant="h4" component="h3">
                 Comments
               </Typography>
@@ -76,7 +126,7 @@ function StudySpot(props) {
             </Box>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={3}>
           <Paper elevation={3}>
             <Box p={2}>
               <Typography variant="h4" component="h3">
@@ -86,12 +136,7 @@ function StudySpot(props) {
             </Box>
           </Paper>
         </Grid>
-      </Grid>
-      <Box mt={2} mb={2}>
-        <Divider orientation="horizontal" />
-      </Box>
-      <Paper elevation={3}>
-        <Box p={2}>
+        <Box sx={{boxShadow: 3, mt: 3, ml:2}} p={2}>
           <Typography variant="h4" component="h3">
             Busyness
           </Typography>
@@ -127,7 +172,7 @@ function StudySpot(props) {
             height={300}
           />
         </Box>
-      </Paper>
+      </Grid>
     </Box>
   );
 }

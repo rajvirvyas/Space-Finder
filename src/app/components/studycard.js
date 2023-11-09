@@ -32,11 +32,7 @@ export default function StudyCard(props) {
   function toggleStar() {
     setIsStarred(!isStarred);
   }
-
-    function toggleOpen() {
-        setOpen(!open);
-    }
-
+  
     const handleMenuClick = (event) => {
       setAnchorEl(event.currentTarget);
     };
@@ -76,6 +72,7 @@ export default function StudyCard(props) {
         justifyContent: 'center',
         position: 'relative',
       }}
+      
     >
       <CardContent>
       <Button sx={{ position: 'absolute', top: 20, left: 10, zIndex: 1, color: 'black',}} onClick={toggleStar}>
@@ -87,9 +84,11 @@ export default function StudyCard(props) {
             borderRadius: 2,
             boxShadow: 6,
             display: { xs: 'none', sm: 'block' },
+            ':hover': { cursor: 'pointer' }
           }}
           image={"https://picsum.photos/300/200"}
           alt={"study"}
+          onClick={() => {window.location.href = '/studyspot'}}
         />
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'left', p: 2 }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -199,61 +198,3 @@ export default function StudyCard(props) {
     </Card>
   );
 }
-
-// return (
-//   <Card sx={{ mx: 3, mb: 4, bgcolor: '#dfebe9', boxShadow: 6, display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
-//     <CardContent>
-        
-//           <CardMedia
-//                 component="img"
-//                 sx={{ borderRadius: 2, boxShadow: 6, display: { xs: 'none', sm: 'block' } }}
-//                 image={"https://picsum.photos/350/200"}
-//                 alt={"study"}
-//             />
-//             {/* <Box sx={{mt: 2}}>
-//                 {isLoaded ? (
-//                 <GoogleMap
-//                     mapContainerStyle={{width: '400px', height: '200px'}}
-//                     center={center}
-//                     zoom={15}
-//                     onLoad={onLoad}
-//                     onUnmount={onUnmount}
-//                 >
-//                 <Marker onClick={toggleOpen} position={center} title='My Marker!'>
-//                     {open && <InfoWindow onCloseClick={() => toggleOpen()}>
-//                             <Box>
-//                                 <Typography>{studyName}: {liveStatus}</Typography>
-//                                 <Typography>Lat: {center.lat}, Long: {center.lng}</Typography>
-//                             </Box>
-//                         </InfoWindow>}
-//                 </Marker>
-//             </GoogleMap>
-//             ) : <></>}
-//             </Box> */}
-//           <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'left', p: 2}}>
-//               <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-//                   <Typography variant="h5" component="div">
-//                       {studyName}
-//                   </Typography>
-//                   <Button sx={{color: 'black', fontWeight: 'bold' }}>. . .</Button>
-//               </Box>
-//               <Box sx={{ display: 'flex', flexDirection: 'row'}}>
-//                   <Typography sx={{ mt: 1.5 }} color="text.secondary">
-//                       Live Status: {liveStatus}
-//                   </Typography>
-//               </Box>
-//               <Box sx={{ display: 'flex', flexDirection: 'row'}}>
-//                   <Typography sx={{mt:1.5}} color="text.secondary">
-//                       Rating: {rating}
-//                   </Typography>
-//               </Box>
-//             <Box>
-//                 <Typography sx={{ mt: 1.5 }} color="text.secondary">
-//                     Top Amenities:
-//                 </Typography>
-//                 <List>
-//                     <ListItem>1. Wifi</ListItem>
-//                     <ListItem>2. Bathroom</ListItem>
-//                     <ListItem>3. Air Conditioning</ListItem>
-//                 </List>
-//             </Box>
