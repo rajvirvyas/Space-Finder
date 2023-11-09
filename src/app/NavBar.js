@@ -2,12 +2,12 @@
 import { usePathname } from 'next/navigation'
 import { Box, Button } from '@mui/material';
 import Link from 'next/link';
+import AddSpot from './AddSpot';
 
 export default function NavBar() {
   const pathname = usePathname();
   const links = [
     { path: '/', name: 'Home' }, 
-    { path: '/create', name: 'Create' }
   ];
 
   return (
@@ -22,6 +22,7 @@ export default function NavBar() {
           >{l.name}</Button>
         )
       })}
+      <AddSpot/>
     </Box>
   );
 }

@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { Button } from '@mui/material';
 import { TextField } from '@mui/material';
@@ -9,9 +9,6 @@ import StudyCard from '../components/studycard';
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
-  // temporary vals (will reset to this after leaving page, need to connect to database)
-  const [name, setName] = useState('Temp Name');
-  const [bio, setBio] = useState('This is a temporary bio. Feel free to edit!');
   const [pfp, setPhoto] = useState("/path/to/profile-picture.jpg");
 
   const toggleEditStatus = () => {
@@ -22,6 +19,9 @@ export default function Profile() {
   };
   const handleBioChange = (e) => {
       setBio(e.target.value);
+  };
+  const handleSchoolChange = (e) => {
+    setSchool(e.target.value);
   };
   const handlePFPChange = (e) => {
     const newImage = e.target.files[0];
@@ -42,6 +42,14 @@ export default function Profile() {
       }
   ]);
 
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+        fetch('/api/users', { method: 'get' })
+            .then((response) => response.ok && response.json())
+            .then(data => setUser(data));
+    }, []);
+
   return (
     <>
       <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', mb: -6 }}>
@@ -61,7 +69,7 @@ export default function Profile() {
             <TextField 
               fullWidth
               required
-              value={name} 
+              value={user.username} 
               inputProps={{ maxLength: 30 }}
               onChange={handleNameChange} 
               helperText="Max 30 characters"
@@ -69,10 +77,18 @@ export default function Profile() {
             <TextField 
               fullWidth
               multiline
-              value={bio} 
+              value={user.bio} 
               inputProps={{ maxLength: 500 }}
               onChange={handleBioChange} 
               helperText="Max 500 characters"
+            />
+            <TextField 
+              fullWidth
+              multiline
+              value={user.school} 
+              inputProps={{ maxLength: 100 }}
+              onChange={handleSchoolChange} 
+              helperText="Max 100 characters"
             />
             <Button onClick={toggleEditStatus} >
               Save
@@ -80,13 +96,16 @@ export default function Profile() {
           </Box> ) : (
           <Box sx={{ p: 10, width: '50vw', display: 'flex', alignItems: 'left', flexDirection: 'column'}}>
             <Typography variant="h3" gutterBottom>
-              {name}
+              {user.username}
             </Typography>
             <Typography variant="body1" gutterBottom>
-              {bio}
+              Bio: {user.bio}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              School: {user.school}
             </Typography>
             <Button sx={{ width: '25vw' }} onClick={toggleEditStatus} >
-              Edit Name/Bio
+              Edit Name/Bio/School
             </Button>
           </Box>
         )}
