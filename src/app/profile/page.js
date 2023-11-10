@@ -11,17 +11,37 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [pfp, setPhoto] = useState("/path/to/profile-picture.jpg");
 
+  const [user, setUser] = useState({username: "test user", email: "test@test.test", password: "test", bio: "short", school: "Cal Poly SLO"});
+
+  /*useEffect(() => {
+      fetch('/api/users', { method: 'get' })
+          .then((response) => response.ok && response.json())
+          .then(data => setUser(data));
+  }, []);*/
+
   const toggleEditStatus = () => {
     setIsEditing(!isEditing);
   };
   const handleNameChange = (e) => {
-    //edit name here
+    // edit name here
+    setUser({
+      ...user,
+      username: e.target.value
+    });
   };
   const handleBioChange = (e) => {
-    //edit bio here
+    // edit bio here
+    setUser({
+      ...user,
+      bio: e.target.value
+    });
   };
   const handleSchoolChange = (e) => {
     // edit school here
+    setUser({
+      ...user,
+      school: e.target.value
+    });
   };
   const handlePFPChange = (e) => {
     const newImage = e.target.files[0];
@@ -41,14 +61,6 @@ export default function Profile() {
           name: 'Coffee Shop',
       }
   ]);
-
-    const [user, setUser] = useState({});
-
-    useEffect(() => {
-        fetch('/api/users', { method: 'get' })
-            .then((response) => response.ok && response.json())
-            .then(data => setUser(data));
-    }, []);
 
   return (
     <>
