@@ -58,6 +58,5 @@ export default function Profile() {
             </Box>
         </Box>
         </>
-        
     )
 }
