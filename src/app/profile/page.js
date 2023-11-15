@@ -11,7 +11,6 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [pfp, setPhoto] = useState("/path/to/profile-picture.jpg");
 
-  //const [user, setUser] = useState({username: "test user", email: "test@test.test", password: "test", bio: "short", school: "Cal Poly SLO"});
   const [user, setUser] = useState({});
   useEffect(() => {
     fetch('/api/users', { method: 'get' })
@@ -23,21 +22,18 @@ export default function Profile() {
     setIsEditing(!isEditing);
   };
   const handleNameChange = (e) => {
-    // edit name here
     setUser({
       ...user,
       username: e.target.value
     });
   };
   const handleBioChange = (e) => {
-    // edit bio here
     setUser({
       ...user,
       bio: e.target.value
     });
   };
   const handleSchoolChange = (e) => {
-    // edit school here
     setUser({
       ...user,
       school: e.target.value
