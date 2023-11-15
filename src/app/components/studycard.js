@@ -19,7 +19,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Alert from '@mui/material/Alert';
 
 export default function StudyCard(props) {
-    const { studyName, liveStatus, rating } = props;
+    const { studyName, liveStatus, rating, image } = props;
     const [isStarred, setIsStarred] = useState(false);
     const [open, setOpen] = useState(false);
     const [ratingState, setRatingState] = useState(rating);
@@ -71,6 +71,7 @@ export default function StudyCard(props) {
         flexDirection: 'column',
         justifyContent: 'center',
         position: 'relative',
+        width: 325,
       }}
       
     >
@@ -86,7 +87,7 @@ export default function StudyCard(props) {
             display: { xs: 'none', sm: 'block' },
             ':hover': { cursor: 'pointer' }
           }}
-          image={"https://picsum.photos/325/200"}
+          image={image}
           alt={"study"}
           onClick={() => {window.location.href = '/studyspot'}}
         />
