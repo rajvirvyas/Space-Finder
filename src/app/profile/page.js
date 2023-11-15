@@ -11,13 +11,13 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [pfp, setPhoto] = useState("/path/to/profile-picture.jpg");
 
-  const [user, setUser] = useState({username: "test user", email: "test@test.test", password: "test", bio: "short", school: "Cal Poly SLO"});
-
-  /*useEffect(() => {
-      fetch('/api/users', { method: 'get' })
-          .then((response) => response.ok && response.json())
-          .then(data => setUser(data));
-  }, []);*/
+  //const [user, setUser] = useState({username: "test user", email: "test@test.test", password: "test", bio: "short", school: "Cal Poly SLO"});
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    fetch('/api/users', { method: 'get' })
+      .then((response) => response.ok && response.json())
+      .then(data => setUser(data));
+  }, []);
 
   const toggleEditStatus = () => {
     setIsEditing(!isEditing);
