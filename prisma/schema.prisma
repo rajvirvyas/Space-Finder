@@ -11,46 +11,46 @@ datasource db {
 }
 
 model User {
-  id  Int @id @default(autoincrement())
-  username String @unique
-  email String @unique
-  password String
-  bio String
-  school String
-  studySpaces studySpace[]
-  comments comment[]
+  id           Int           @id @default(autoincrement())
+  username     String        @unique
+  email        String        @unique
+  password     String
+  bio          String
+  school       String
+  studySpaces  studySpace[]
+  comments     comment[]
   reservations reservation[]
 }
 
 model studySpace {
-  id Int @id @default(autoincrement())
-  name String
-  building String
-  longitude Float
-  latitude Float
-  owner User @relation(fields: [ownerId], references: [id])
-  ownerId Int
-  capacity Int
-  rating Float
-  busyness Float
-  comments comment[]
+  id           Int           @id @default(autoincrement())
+  name         String
+  building     String
+  longitude    Float
+  latitude     Float
+  owner        User          @relation(fields: [ownerId], references: [id])
+  ownerId      Int
+  capacity     Int
+  rating       Float
+  busyness     Float
+  comments     comment[]
   reservations reservation[]
-  img String
+  img          String
 }
 
 model comment {
-  id Int @id @default(autoincrement())
-  text String
-  owner User @relation(fields: [ownerId], references: [id])
-  ownerId Int
-  studySpace studySpace @relation(fields: [studySpaceId], references: [id])
+  id           Int        @id @default(autoincrement())
+  text         String
+  owner        User       @relation(fields: [ownerId], references: [id])
+  ownerId      Int
+  studySpace   studySpace @relation(fields: [studySpaceId], references: [id])
   studySpaceId Int
 }
 
 model reservation {
-  id Int @id @default(autoincrement())
-  owner User @relation(fields: [ownerId], references: [id])
-  ownerId Int
-  studySpace studySpace @relation(fields: [studySpaceId], references: [id])
+  id           Int        @id @default(autoincrement())
+  owner        User       @relation(fields: [ownerId], references: [id])
+  ownerId      Int
+  studySpace   studySpace @relation(fields: [studySpaceId], references: [id])
   studySpaceId Int
 }

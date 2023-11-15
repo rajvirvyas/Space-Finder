@@ -8,6 +8,7 @@ export default function NavBar() {
   const pathname = usePathname();
   const links = [
     { path: '/', name: 'Home' }, 
+    { path: '/map', name: 'Map' },
   ];
 
   return (
@@ -17,12 +18,14 @@ export default function NavBar() {
         return (
           <Button component={Link}
                   href={l.path}
-                  sx={{ my: 2, color: 'inherit', display: 'block', textDecoration: (isActive ? 'underline' : 'inherit') }}
+                  sx={{ my: 2, color: 'inherit', textDecoration: (isActive ? 'underline' : 'inherit') }}
                   key={l.path}
           >{l.name}</Button>
         )
       })}
-      <AddSpot/>
+      <Box sx={{my: 'auto'}}>
+        <AddSpot/>
+      </Box>
     </Box>
   );
 }

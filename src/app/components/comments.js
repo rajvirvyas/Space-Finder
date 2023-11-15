@@ -85,7 +85,7 @@ export default function Comments() {
             <TextField
                 id="standard-textarea"
                 label="Add a Comment"
-                placeholder="Placeholder"
+                placeholder="Comment"
                 multiline
                 variant="standard"
             />
