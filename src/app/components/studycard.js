@@ -19,7 +19,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Alert from '@mui/material/Alert';
 
 export default function StudyCard(props) {
-    const { studyName, liveStatus, rating, image } = props;
+    const { id, studyName, liveStatus, rating, image } = props;
     const [isStarred, setIsStarred] = useState(false);
     const [open, setOpen] = useState(false);
     const [ratingState, setRatingState] = useState(rating);
@@ -63,15 +63,15 @@ export default function StudyCard(props) {
   return (
     <Card
       sx={{
-        mx: 6,
-        mb: 4,
+        mx: 4,
+        mb: 10,
         bgcolor: '#dfebe9',
         boxShadow: 6,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         position: 'relative',
-        width: 325,
+        width: 300,
       }}
       
     >
@@ -89,18 +89,19 @@ export default function StudyCard(props) {
           }}
           image={image}
           alt={"study"}
-          onClick={() => {window.location.href = '/studyspot'}}
+          onClick={() => {window.location.href = `/studyspot/${id}`}}
         />
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'left', p: 2 }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Typography variant="h5" component="div">
+            <Typography component="div">
               {studyName}
             </Typography>
             <Button
               onClick={handleMenuClick}
-              sx={{ color: 'black', fontWeight: 'bold' }}
+              sx={{ color: 'black', ':hover': { bgcolor: 'gray' } }}
+              size="small"
             >
-              Actions
+              . . .
             </Button>
             <Menu
               anchorEl={anchorEl}

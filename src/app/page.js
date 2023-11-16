@@ -10,7 +10,7 @@ export default function Home() {
   const [studies, setStudies] = useState([]);
 
   useEffect(() => {
-    fetch('/api/study-spaces', { method: 'GET' })
+    fetch('/api/study-spaces', { method: 'GET', })
       .then((response) => response.ok && response.json())
       .then((data) => {
         setStudies(data);
@@ -39,7 +39,7 @@ export default function Home() {
             <ArrowBackIosNew />
           </IconButton>
           {studies.slice(startIndex, startIndex + 2).map((study, index) => (
-            <StudyCard key={index} studyName={study.name} 
+            <StudyCard key={index} id={study.id} studyName={study.name} 
             liveStatus={study.liveStatus} rating={study.rating}
             image={study.img} />
           ))}
