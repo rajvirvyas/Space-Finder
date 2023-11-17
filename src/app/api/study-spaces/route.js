@@ -11,6 +11,7 @@ export async function POST(request) {
     const loggedInData = await checkLoggedIn();
     if (loggedInData.loggedIn) {
         const { name, building, longitude, latitude, capacity } = await request.json();
+        console.log(name, building, longitude, latitude, capacity);
         const studyRoom = await prisma.studySpace.create({
         data: {
             ownerId: loggedInData.user?.id,

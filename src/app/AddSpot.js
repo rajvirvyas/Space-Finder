@@ -33,8 +33,10 @@ export default function AddSpot() {
       const spotData = {};
       spotData['name'] = data.get('spotName');
       spotData['building'] = data.get('building');
+      spotData['longitude'] = "0";
+      spotData['latitude'] = "0";
       spotData['capacity'] = +data.get('capacity');
-      console.log(spotData);
+      console.log(JSON.stringify(spotData));
       // submit form
       fetch("/api/study-spaces", {
         method: 'post',

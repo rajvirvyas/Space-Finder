@@ -3,6 +3,8 @@ import prisma from "@/lib/db";
 import { checkLoggedIn } from "@/lib/auth";
 import { useSearchParams } from 'next/navigation'
 
+// in order to call this API, you must provide field to the url
+// i.e. /api/comments?ssid=1
 export async function GET(request) {
   const searchParams = useSearchParams()
   const ssid = searchParams.get('ssid')
