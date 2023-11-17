@@ -5,11 +5,10 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Box, List, ListItem, Menu, MenuItem } from '@mui/material';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import CardMedia from '@mui/material/CardMedia';
 import { useState } from 'react';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
+import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import Rating from '@mui/material/Rating';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -20,100 +19,89 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Alert from '@mui/material/Alert';
 
 export default function StudyCard(props) {
-  const { studyName, liveStatus, rating } = props;
-  const [ratingState, setRatingState] = useState(rating);
-  const [isStarred, setIsStarred] = useState(false);
+    const { id, studyName, liveStatus, rating, image } = props;
+    const [isStarred, setIsStarred] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [ratingState, setRatingState] = useState(rating);
   const [anchorEl, setAnchorEl] = React.useState(null);
 //   report
-  const [ open, setOpen ] = useState(false);
   const [ formState, setFormState ] = useState({});
   const [ error, setError ] = useState(false);
 //   report
 
-  function increaseRating() {
-    setRatingState(ratingState + 0.5);
-  }
-
-  function decreaseRating() {
-    setRatingState(ratingState - 0.5);
-  }
-
   function toggleStar() {
     setIsStarred(!isStarred);
   }
-
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-  const handleCheckIn = () => {
-    setAnchorEl(null); // Close the menu when "Check In" is clicked
-    displayCheckInMessage(); // Function to display a pop-up message
-  };
-
-  const displayCheckInMessage = () => {
-    alert('Yay! You\'ve checked in.');
-  };
-  const handleRatingChange = (event, newValue) => {
-    setRatingState(newValue);
-  };
-  const handleReportButton = (event, newValue) => {
-    setOpen(true);
-    setFormState({});
-  };
-  function handleClose() {
-    setOpen(false);
-  }
+  
+    const handleMenuClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+  
+    const handleMenuClose = () => {
+      setAnchorEl(null);
+    };
+    const handleCheckIn = () => {
+      setAnchorEl(null); // Close the menu when "Check In" is clicked
+      displayCheckInMessage(); // Function to display a pop-up message
+    };
+  
+    const displayCheckInMessage = () => {
+      alert('Yay! You\'ve checked in.');
+    };
+    const handleRatingChange = (event, newValue) => {
+      setRatingState(newValue);
+    };
+    const handleReportButton = (event, newValue) => {
+      setOpen(true);
+      setFormState({});
+    };
+    function handleClose() {
+      setOpen(false);
+    }
+  
 
   return (
     <Card
       sx={{
-        mx: 6,
-        mb: 4,
+        mx: 4,
+        mb: 10,
         bgcolor: '#dfebe9',
         boxShadow: 6,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         position: 'relative',
+        width: 300,
       }}
+      
     >
       <CardContent>
-        <Button
-          sx={{
-            position: 'absolute',
-            top: 20,
-            left: 10,
-            zIndex: 1,
-            color: 'black',
-          }}
-          onClick={toggleStar}
-        >
-          <StarBorderIcon sx={{ fontSize: 30 }} />
-        </Button>
+      <Button sx={{ position: 'absolute', top: 20, left: 10, zIndex: 1, color: 'black',}} onClick={toggleStar}>
+                {isStarred ? <BookmarkAddedIcon sx={{fontSize: 30, color: 'white'}} /> : <BookmarkAddIcon sx={{fontSize: 30, color: 'white'}} />}
+            </Button>
         <CardMedia
           component="img"
           sx={{
             borderRadius: 2,
             boxShadow: 6,
             display: { xs: 'none', sm: 'block' },
+            ':hover': { cursor: 'pointer' }
           }}
-          image={"https://picsum.photos/300/200"}
+          image={image}
           alt={"study"}
+          onClick={() => {window.location.href = `/studyspot/${id}`}}
         />
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'left', p: 2 }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Typography variant="h5" component="div">
+            <Typography component="div">
               {studyName}
             </Typography>
             <Button
               onClick={handleMenuClick}
-              sx={{ color: 'black', fontWeight: 'bold' }}
+              sx={{ color: 'black', ':hover': { bgcolor: 'gray' } }}
+              size="small"
             >
-              Actions
+              . . .
             </Button>
             <Menu
               anchorEl={anchorEl}
@@ -187,19 +175,10 @@ export default function StudyCard(props) {
               Live Status: {liveStatus}
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <Typography sx={{ mt: 1.5 }} color="text.secondary">
-              Rating:
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-              <Button onClick={increaseRating} sx={{ minWidth: 5, color: 'black' }}>
-                <ArrowUpwardIcon />
-              </Button>
-              <Typography sx={{ mt: 1 }}>{ratingState}</Typography>
-              <Button onClick={decreaseRating} sx={{ minWidth: 5, color: 'black' }}>
-                <ArrowDownwardIcon />
-              </Button>
-            </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'row'}}>
+                      <Typography sx={{mt:1.5}} color="text.secondary">
+                          Rating: {ratingState}
+                      </Typography>
           </Box>
           <Box>
             <Typography sx={{ mt: 1.5 }} color="text.secondary">

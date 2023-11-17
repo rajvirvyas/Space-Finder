@@ -75,7 +75,6 @@ export default function RootLayout({ children, title }) {
               <Box sx={{ flexGrow: 0 }}>
                 <Stack direction='row' spacing={2}>
                   <Button color='inherit'>Contact Us</Button>
-                  <Button color='inherit'>Find a Spot</Button>
                   {loginSection}
                 </Stack>
               </Box>
