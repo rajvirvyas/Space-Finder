@@ -114,11 +114,10 @@ export default function AddSpot() {
             id="spotName"
             name="spotName"
             label="Spot Name"
-            type="spotName"
+            type="text"
             fullWidth
             variant="standard"
             required
-     
           />
           <TextField
             onChange={(e) => setFormState({...formState, building: e.target.value})}
@@ -126,7 +125,7 @@ export default function AddSpot() {
             id="building"
             name="building"
             label="Building"
-            type="building"
+            type="text"
             required
             fullWidth
             variant='standard'/>
@@ -134,7 +133,7 @@ export default function AddSpot() {
             onChange={(e) => setFormState({...formState, capacity: e.target.value})}
             margin="dense"
             name="capacity"
-            id="SpotCap"
+            id="capacity"
             label="Spot Capacity"
             inputProps={{min: 0}}
             type="number"
@@ -169,7 +168,6 @@ export default function AddSpot() {
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={submitSpot} type="submit">Submit for Review</Button>
         </DialogActions>
-        
       </Dialog>}
     </>
   );
