@@ -81,7 +81,7 @@ export default function AddSpot() {
         longitude: markerPosition.lng,
         latitude: markerPosition.lat,
         capacity: formState.capacity,
-        rating: 0,
+        rating: [],
         busyness: 0,
         img: "https://content-calpoly-edu.s3.amazonaws.com/foundation/1/images/20130820_science-math_app_0072%20%2875%25%29.jpg",
       })

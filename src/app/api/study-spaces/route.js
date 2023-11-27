@@ -3,8 +3,8 @@ import prisma from "@/lib/db";
 import { checkLoggedIn } from "@/lib/auth";
 
 export async function GET(request) {
-  const studySpaces = await prisma.studySpace.findMany({});
-  return NextResponse.json(studySpaces);
+    const studySpaces = await prisma.studySpace.findMany({});
+    return NextResponse.json(studySpaces);
 }
 
 export async function POST(request) {

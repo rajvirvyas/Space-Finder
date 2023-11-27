@@ -37,7 +37,7 @@ export default function RootLayout({ children, title }) {
   if (status === 'authenticated') {
     loginSection = <>
     <Button variant="outlined" color="inherit" href='/profile'>Profile</Button>
-    <Button variant="outlined" color="inherit" onClick={() => signOut()}>Sign Out</Button>
+    <Button variant="outlined" color="inherit" onClick={() => signOut({ callbackUrl: '/'})}>Sign Out</Button>
     </>;
   } else {
     loginSection = <>

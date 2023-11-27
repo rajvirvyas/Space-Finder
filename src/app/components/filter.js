@@ -32,7 +32,7 @@ export default function Filter() {
 
     return (
         <Box sx={{ height: '50%', width: '20%', 
-        bgcolor: "#dfebe9", borderRadius: 3, boxShadow: 4, p: 2, mx: 6,
+        bgcolor: "#dfebe9", borderRadius: 3, boxShadow: 4, p: 2, ml: 1,
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5}}>
             <Typography sx={{ fontSize: 24, letterSpacing: 1, mt: 3, mb: -2}}>
                 Filters
