@@ -14,36 +14,35 @@ export default function Home() {
       .then((response) => response.ok && response.json())
       .then((data) => {
         setStudies(data);
-        console.log(data);
       });
   }, []);
 
   const handlePrev = () => {
     if (startIndex > 0) {
-      setStartIndex(startIndex - 2);
+      setStartIndex(startIndex - 3);
     }
   };
 
   const handleNext = () => {
-    if (startIndex < studies.length - 2) {
-      setStartIndex(startIndex + 2);
+    if (startIndex < studies.length - 3) {
+      setStartIndex(startIndex + 3);
     }
   };
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: "space-between", p: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: "space-between", p: 1 }}>
         <Filter />
         <Box sx={{ display: "flex", justifyContent: 'flex-start', flexWrap: 'wrap', alignItems: 'center' }}>
           <IconButton onClick={handlePrev} disabled={startIndex === 0}>
             <ArrowBackIosNew />
           </IconButton>
-          {studies.slice(startIndex, startIndex + 2).map((study, index) => (
+          {studies.slice(startIndex, startIndex + 3).map((study, index) => (
             <StudyCard key={index} id={study.id} studyName={study.name} 
             liveStatus={study.liveStatus} rating={study.rating}
             image={study.img} />
           ))}
-          <IconButton onClick={handleNext} disabled={startIndex >= studies.length - 2}>
+          <IconButton onClick={handleNext} disabled={startIndex >= studies.length - 3}>
             <ArrowForwardIos />
           </IconButton>
         </Box>

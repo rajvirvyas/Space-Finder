@@ -10,6 +10,7 @@ import StudyCard from '../components/studycard';
 export default function Profile() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [pfp, setPhoto] = useState("/path/to/profile-picture.jpg");
+	const [studySpots, setStudySpots] = useState([]);
 
 	const [user, setUser] = useState({});
 
@@ -19,6 +20,11 @@ export default function Profile() {
 			.then(data => {
 				setUser(data);
 				if (data.profilePic !== "" && data.profilePic !== undefined) decodeImage(data.profilePic);
+			});
+		fetch('/api/users/studyspaces', { method: 'get' })
+			.then((response) => response.ok && response.json())
+			.then(data => {
+				setStudySpots(data);
 			});
 	}, []);
 
@@ -120,21 +126,6 @@ export default function Profile() {
 		setPhoto(objectUrl);
 	};
 
-	const [recentSpots, setRecentSpots] = useState([
-		{
-			id: 1,
-			name: 'Library',
-		},
-		{
-			id: 2,
-			name: 'Study Room',
-		},
-		{
-			id: 3,
-			name: 'Coffee Shop',
-		}
-	]);
-
 	return (
 		<>
 			<Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', mb: -6 }}>
@@ -199,11 +190,13 @@ export default function Profile() {
 			</Box>
 			<Box>
 				<Typography sx={{ m: 6, fontSize: 24 }}>
-					Recent Study Spots
+					My Study Spots
 				</Typography>
 				<Box sx={{ display: 'flex', flexWrap: 'wrap', }}>
-					{recentSpots.map(spot => (
-						<StudyCard key={spot.id} studyName={spot.name} liveStatus={"Busy AF"} rating={4.5} />
+					{studySpots.map((study, index) => (
+						<StudyCard key={index} id={study.id} studyName={study.name} 
+						liveStatus={study.liveStatus} rating={study.rating}
+						image={study.img} />
 					))}
 				</Box>
 			</Box>
