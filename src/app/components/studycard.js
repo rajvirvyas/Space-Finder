@@ -17,6 +17,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Alert from '@mui/material/Alert';
+import { useRouter } from 'next/navigation';
 import { Star } from '@mui/icons-material';
 
 export default function StudyCard(props) {
@@ -25,10 +26,9 @@ export default function StudyCard(props) {
     const [open, setOpen] = useState(false);
     const [ratingState, setRatingState] = useState([]);
     const [anchorEl, setAnchorEl] = React.useState(null);
-  //   report
     const [ formState, setFormState ] = useState({});
     const [ error, setError ] = useState(false);
-  //   report
+    const router = useRouter();
 
   useEffect(() => {
     fetch(`/api/ratings/${id}`, { method: 'GET'})
@@ -135,7 +135,7 @@ export default function StudyCard(props) {
           }}
           image={image}
           alt={"study"}
-          onClick={() => {window.location.href = `/studyspot/${id}`}}
+          onClick={() => router.push(`/studyspot/${id}`)}
         />
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'left', p: 2 }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -241,7 +241,8 @@ export default function StudyCard(props) {
       </CardContent>
       <CardActions sx={{ mt: -3 }}>
         <Box sx={{ ml: 4, mb: 2}}>
-            <Button sx={{ bgcolor: 'black', color: 'white', ':hover': { bgcolor: 'gray'}}} size="small">Comments</Button>
+            <Button sx={{ bgcolor: 'black', color: 'white', ':hover': { bgcolor: 'gray'}}} size="small"
+            onClick={() => router.push(`/studyspot/${id}`)}>Comments</Button>
         </Box>
       </CardActions>
     </Card>
