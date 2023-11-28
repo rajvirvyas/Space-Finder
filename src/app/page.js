@@ -7,12 +7,28 @@ import StudyCard from './components/studycard';
 
 export default function Home() {
   const [startIndex, setStartIndex] = useState(0);
+  const [dbStudies, setdbStudies] = useState([]);
   const [studies, setStudies] = useState([]);
+  const [search, setSearch] = useState('');
+  const [rating, setRating] = useState(0);
+
+  function onRatingChange(event) {
+    setRating(event.target.value);
+    let newStudies = dbStudies.filter((study) => study.avgRating >= event.target.value);
+    setStudies(newStudies);
+  }
+
+  function onSearchChange(event) {
+    setSearch(event.target.value);
+    let newStudies = dbStudies.filter((study) => study.name.toLowerCase().includes(event.target.value.toLowerCase()));
+    setStudies(newStudies);
+  }
 
   useEffect(() => {
     fetch('/api/study-spaces', { method: 'GET', })
       .then((response) => response.ok && response.json())
       .then((data) => {
+        setdbStudies(data);
         setStudies(data);
       });
   }, []);
@@ -32,19 +48,23 @@ export default function Home() {
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: "space-between", p: 1 }}>
-        <Filter />
-        <Box sx={{ display: "flex", justifyContent: 'flex-start', flexWrap: 'wrap', alignItems: 'center' }}>
-          <IconButton onClick={handlePrev} disabled={startIndex === 0}>
+        <Filter search={search} rating={rating} onSearchChange={onSearchChange} onRatingChange={onRatingChange}/>
+        <Box sx={{ display: "flex", justifyContent: 'space-evenly', flexWrap: 'wrap', alignItems: 'center',
+                    overflow: 'scroll', maxHeight: '85vh' }}>
+          {studies.map((study, index) => (
+            <StudyCard key={index} id={study.id} studyName={study.name}
+              liveStatus={study.liveStatus} rating={study.avgRating} image={study.img} />
+          ))}
+          {/* <IconButton onClick={handlePrev} disabled={startIndex === 0}>
             <ArrowBackIosNew />
           </IconButton>
           {studies.slice(startIndex, startIndex + 3).map((study, index) => (
             <StudyCard key={index} id={study.id} studyName={study.name} 
-            liveStatus={study.liveStatus} rating={study.rating}
-            image={study.img} />
+            liveStatus={study.liveStatus} rating={study.avgRating} image={study.img} />
           ))}
           <IconButton onClick={handleNext} disabled={startIndex >= studies.length - 3}>
             <ArrowForwardIos />
-          </IconButton>
+          </IconButton> */}
         </Box>
       </Box>
     </>

@@ -38,6 +38,7 @@ model studySpace {
   reservations reservation[]
   img          String
   rating       Rating[]
+  avgRating    Float         @default(0)
 }
 
 model Rating {

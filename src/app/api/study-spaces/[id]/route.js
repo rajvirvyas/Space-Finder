@@ -12,8 +12,6 @@ export async function GET(request, { params}) {
     return NextResponse.json(space);
 }
 
-
-
 export async function PUT(request, { params }) {
   const loggedInData = await checkLoggedIn();
   const id = +params.id;

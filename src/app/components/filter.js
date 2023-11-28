@@ -1,7 +1,8 @@
 import { Box, Slider, TextField, Typography, MenuItem, Select, InputLabel, Chip, FormControl, Checkbox, ListItemText } from '@mui/material';
 import React, { useState } from 'react';
 
-export default function Filter() {
+export default function Filter(props) {
+    const { search, rating, onSearchChange, onRatingChange } = props;
     const [amenities, setAmenities] = useState([]);
 
     const handleAmenitiesChange = (event) => {
@@ -37,8 +38,7 @@ export default function Filter() {
             <Typography sx={{ fontSize: 24, letterSpacing: 1, mt: 3, mb: -2}}>
                 Filters
             </Typography>
-            <TextField id="outlined-basic" label="Search" variant="standard" size='small'/>
-            <TextField id="outlined-basic" label="Building Name" variant="standard" size='small'/>
+            <TextField id="outlined-basic" label="Search" variant="standard" size='small' value={search} onChange={onSearchChange}/>
             <Box sx={{ width: 0.6 }}>
                 <Typography>
                     Rating
@@ -46,11 +46,12 @@ export default function Filter() {
                 <Slider
                     aria-label="Rating"
                     size="medium"
-                    defaultValue={2}
+                    value={rating}
                     step={1}
                     min={1}
                     max={5}
                     marks={[{value: 1, label: '1'}, {value: 5, label: '5'}]}
+                    onChange={onRatingChange}
                     valueLabelDisplay="auto"
                 />   
             </Box>
@@ -73,7 +74,7 @@ export default function Filter() {
                     Proximity
                 </Typography>
                 <Slider
-                    aria-label="Busyness"
+                    aria-label="Proximity"
                     defaultValue={10}
                     step={5}
                     max={50}
