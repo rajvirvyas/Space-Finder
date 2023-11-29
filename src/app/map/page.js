@@ -8,8 +8,7 @@ function Map() {
     const [studySpots, setStudySpots] = useState([]);
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
-        libraries: ['geometry']
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY
     })
 
     const [map, setMap] = React.useState(null)

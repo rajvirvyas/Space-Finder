@@ -4,7 +4,6 @@ import { Box, IconButton } from '@mui/material';
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 import Filter from './components/filter';
 import StudyCard from './components/studycard';
-import { useJsApiLoader } from '@react-google-maps/api'
 
 export default function Home() {
   const [startIndex, setStartIndex] = useState(0);
@@ -12,12 +11,7 @@ export default function Home() {
   const [studies, setStudies] = useState([]);
   const [search, setSearch] = useState('');
   const [rating, setRating] = useState(0);
-  const [location, setLocation] = useState({lat: 0, long: 0});
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
-    libraries: ['geometry']
-})
+  const [location, setLocation] = useState({lat: 35.3050, lng: -120.6625});
 
   function onRatingChange(event) {
     setRating(event.target.value);
@@ -37,13 +31,25 @@ export default function Home() {
     setStudies(newStudies);
   }
 
-  function getDistance(lat1, lon1, lat2, lon2) {
-    if(isLoaded) {
-      const dist = google.maps.geometry.spherical.computeDistanceBetween(new google.maps.LatLng(lat1, lon1),
-      new google.maps.LatLng(lat2, lon2)) / 1609.34;
-      return dist;
+  function getDistance(lat1, lon1, lat2, lon2) 
+    {
+      var R = 6371; // km
+      var dLat = toRad(lat2-lat1);
+      var dLon = toRad(lon2-lon1);
+      var lat1 = toRad(lat1);
+      var lat2 = toRad(lat2);
+
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+      var d = R * c;
+      return d * 0.621371;
     }
-  }
+
+    function toRad(Value) 
+    {
+        return Value * Math.PI / 180;
+    }
 
   useEffect(() => {
     fetch('/api/study-spaces', { method: 'GET', })
@@ -58,6 +64,8 @@ export default function Home() {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             });
+        }, (error) => {
+          console.log(error);
         });
     } else {
         console.log("Geolocation is not supported by this browser.");
