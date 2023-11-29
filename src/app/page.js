@@ -72,18 +72,6 @@ export default function Home() {
     }
   }, []);
 
-  const handlePrev = () => {
-    if (startIndex > 0) {
-      setStartIndex(startIndex - 3);
-    }
-  };
-
-  const handleNext = () => {
-    if (startIndex < studies.length - 3) {
-      setStartIndex(startIndex + 3);
-    }
-  };
-
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: "space-between", p: 1 }}>
@@ -96,16 +84,6 @@ export default function Home() {
             <StudyCard key={index} id={study.id} studyName={study.name}
               liveStatus={study.liveStatus} rating={study.avgRating} image={study.img} />
           ))}
-          {/* <IconButton onClick={handlePrev} disabled={startIndex === 0}>
-            <ArrowBackIosNew />
-          </IconButton>
-          {studies.slice(startIndex, startIndex + 3).map((study, index) => (
-            <StudyCard key={index} id={study.id} studyName={study.name} 
-            liveStatus={study.liveStatus} rating={study.avgRating} image={study.img} />
-          ))}
-          <IconButton onClick={handleNext} disabled={startIndex >= studies.length - 3}>
-            <ArrowForwardIos />
-          </IconButton> */}
         </Box>
       </Box>
     </>
