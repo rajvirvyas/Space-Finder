@@ -184,12 +184,12 @@ export default function StudyCard(props) {
             >
               <MenuItem onClick={handleCheckIn}>Check In</MenuItem>
               <MenuItem onClick={handleMenuClose}>Rate: 
-              <Rating
-            name="rating"
-            value={ratingState}
-            precision={0.5}
-            onChange={handleRatingChange}/>
-          </MenuItem>
+                  <Rating
+                name="rating"
+                value={ratingNum}
+                precision={0.5}
+                onChange={handleRatingChange}/>
+              </MenuItem>
               <MenuItem onClick={handleReportButton}>Report</MenuItem>
               </Menu>
               {/* -------------------------------- */}

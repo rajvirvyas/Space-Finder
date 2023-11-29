@@ -8,7 +8,9 @@ import {
   Slider,
   Paper,
   Grid,
-  fabClasses,
+  Menu,
+  MenuItem,
+  Rating
 } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
@@ -16,8 +18,11 @@ import Comments from '../../components/comments';
 import AmenitiesList from '../../components/amenitiesList';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 function StudySpot(props) {
+  const { data: session, status }  = useSession();
+
     const [open, setOpen] = useState(false);
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
@@ -25,7 +30,11 @@ function StudySpot(props) {
     })
     const params = useParams();
     const [spot, setSpot] = useState({});
+    const [anchorEl, setAnchorEl] = React.useState(null);
     const [map, setMap] = React.useState(null)
+    const [ratingState, setRatingState] = useState([]);
+    const [ratingNum, setRatingNum] = useState(0);
+    const [ratingLen, setRatingLen] = useState(0);
     const [center, setCenter] = React.useState({
         lat: 35.305,
         lng: -120.6625
@@ -36,8 +45,14 @@ function StudySpot(props) {
           .then((response) => response.ok && response.json())
           .then((data) => {
             setSpot(data);
+            setRatingNum(data.avgRating);
             setCenter({lat: data.latitude, lng: data.longitude});
-            console.log(data);
+            fetch(`/api/ratings/${data.id}`, { method: 'GET'})
+              .then((response) => response.ok && response.json())
+              .then((ratings) => {
+                setRatingState(ratings);
+                setRatingLen(ratings.length);
+            });
           });
       }, []);
 
@@ -54,9 +69,67 @@ function StudySpot(props) {
 
     function toggleOpen() {
       setOpen(!open);
-  }
+    }
 
-  const loggedIn = false; // Replace with a field passed through props
+      const handleCheckIn = () => {
+        setAnchorEl(null); // Close the menu when "Check In" is clicked
+        displayCheckInMessage(); // Function to display a pop-up message
+      };
+    
+      const displayCheckInMessage = () => {
+        alert('Yay! You\'ve checked in.');
+      };
+      
+      const handleRatingChange = async (event, newValue) => {
+        try {
+          // Send a request to your backend to update the rating
+          let response = await fetch('/api/ratings', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              studySpaceID: spot.id,
+              value: newValue,
+            }),
+          });
+  
+          if (response.ok) {
+            const responseData = await response.json();
+            const updatedRatings = ratingState.map((rating) => {
+              if (rating.userId === responseData.userId) {
+                return { ...rating, value: responseData.value };
+              }
+              return rating;
+            });
+  
+            if (!updatedRatings.some((rating) => rating.userId === responseData.userId)) {
+              updatedRatings.push({ userId: responseData.userId, value: responseData.value });
+            }
+  
+            let ratingNum = updatedRatings.length === 0 ? 0 : (updatedRatings.map(obj => obj.value).reduce((a, b) => a + b, 0) / updatedRatings.length).toFixed(1)
+            response = await fetch(`/api/study-spaces/avg-rating/${spot.id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                studyID: spot.id,
+                avgRating: ratingNum,
+              }),
+            });
+  
+            setRatingLen(updatedRatings.length);
+            setRatingState(updatedRatings);
+            setRatingNum(ratingNum);
+          } else {
+            throw new Error('Failed to update rating');
+          }
+        } catch (error) {
+          console.error(error);
+          // Handle the error here, e.g. display an error message to the user
+        }
+      };
 
   return (
     <Box p={2}>
@@ -73,14 +146,18 @@ function StudySpot(props) {
               <Typography variant="body1" gutterBottom>
                 School: Cal Poly SLO
               </Typography>
-              {loggedIn ? (
-                <Box display="flex" flexDirection="column" alignItems="center">
-                  <Button variant="outlined" color="primary" width="200px" href="#">
-                    Rate
-                  </Button>
-                  <Button variant="outlined" color="primary" href="#">
-                    Report
-                  </Button>
+              {status === "authenticated" ? (
+                <Box display="flex" flexDirection="row" justifyContent="space-around">
+              <MenuItem onClick={handleCheckIn}>Check In</MenuItem>
+              <Box sx={{display: "flex", flexDirection: "column", mt: 2}}>
+                <Typography>Rate: 
+                  <Rating precision={0.5} onChange={handleRatingChange}/>
+                </Typography>
+                <Typography sx={{mx: "auto"}} color="text.secondary">
+                  {ratingNum} {` (${ratingLen} ratings)`}
+                </Typography>
+              </Box>
+              <MenuItem>Report</MenuItem>
                 </Box>
               ) : (
                 <Box display="flex" flexDirection="column" alignItems="center">

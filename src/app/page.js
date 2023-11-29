@@ -1,12 +1,10 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { Box, IconButton } from '@mui/material';
-import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 import Filter from './components/filter';
 import StudyCard from './components/studycard';
 
 export default function Home() {
-  const [startIndex, setStartIndex] = useState(0);
   const [dbStudies, setdbStudies] = useState([]);
   const [studies, setStudies] = useState([]);
   const [search, setSearch] = useState('');
