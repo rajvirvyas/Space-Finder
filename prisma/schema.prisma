@@ -17,9 +17,11 @@ model User {
   password     String
   bio          String
   school       String
+  profilePic   String
   studySpaces  studySpace[]
   comments     comment[]
   reservations reservation[]
+  Rating       Rating[]
 }
 
 model studySpace {
@@ -31,11 +33,22 @@ model studySpace {
   owner        User          @relation(fields: [ownerId], references: [id])
   ownerId      Int
   capacity     Int
-  rating       Float
   busyness     Float
   comments     comment[]
   reservations reservation[]
   img          String
+  rating       Rating[]
+}
+
+model Rating {
+  id           Int        @id @default(autoincrement())
+  value        Float
+  user         User       @relation(fields: [userId], references: [id])
+  userId       Int
+  studySpace   studySpace @relation(fields: [studySpaceId], references: [id])
+  studySpaceId Int
+
+  @@unique([userId, studySpaceId])
 }
 
 model comment {

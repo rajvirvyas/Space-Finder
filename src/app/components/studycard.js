@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Box, List, ListItem, Menu, MenuItem } from '@mui/material';
 import CardMedia from '@mui/material/CardMedia';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import Rating from '@mui/material/Rating';
@@ -17,17 +17,27 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Alert from '@mui/material/Alert';
+import { useRouter } from 'next/navigation';
+import { Star } from '@mui/icons-material';
 
 export default function StudyCard(props) {
-    const { studyName, liveStatus, rating } = props;
+    const { id, studyName, liveStatus, rating, image } = props;
     const [isStarred, setIsStarred] = useState(false);
     const [open, setOpen] = useState(false);
-    const [ratingState, setRatingState] = useState(rating);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-//   report
-  const [ formState, setFormState ] = useState({});
-  const [ error, setError ] = useState(false);
-//   report
+    const [ratingState, setRatingState] = useState([]);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [ formState, setFormState ] = useState({});
+    const [ error, setError ] = useState(false);
+    const router = useRouter();
+
+  useEffect(() => {
+    fetch(`/api/ratings/${id}`, { method: 'GET'})
+      .then((response) => response.ok && response.json())
+      .then((ratings) => {
+        const values = ratings.map((rating) => ({ userId: rating.userId, value: rating.value }));
+        setRatingState(values);
+      });
+  }, []);
 
   function toggleStar() {
     setIsStarred(!isStarred);
@@ -48,29 +58,66 @@ export default function StudyCard(props) {
     const displayCheckInMessage = () => {
       alert('Yay! You\'ve checked in.');
     };
-    const handleRatingChange = (event, newValue) => {
-      setRatingState(newValue);
+    
+    const handleRatingChange = async (event, newValue) => {
+      try {
+        // Send a request to your backend to update the rating
+        const response = await fetch('/api/ratings', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            studySpaceID: id,
+            value: newValue,
+          }),
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          const updatedRatings = ratingState.map((rating) => {
+            if (rating.userId === responseData.userId) {
+              return { ...rating, value: responseData.value };
+            }
+            return rating;
+          });
+
+          if (!updatedRatings.some((rating) => rating.userId === responseData.userId)) {
+            updatedRatings.push({ userId: responseData.userId, value: responseData.value });
+          }
+
+          setRatingState(updatedRatings);
+        } else {
+          throw new Error('Failed to update rating');
+        }
+      } catch (error) {
+        console.error(error);
+        // Handle the error here, e.g. display an error message to the user
+      }
     };
+
     const handleReportButton = (event, newValue) => {
       setOpen(true);
       setFormState({});
     };
+
     function handleClose() {
       setOpen(false);
     }
-  
 
   return (
     <Card
       sx={{
-        mx: 6,
-        mb: 4,
+        mx: 2,
+        mb: 10,
         bgcolor: '#dfebe9',
         boxShadow: 6,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         position: 'relative',
+        width: 300,
+        height: 500
       }}
       
     >
@@ -84,22 +131,23 @@ export default function StudyCard(props) {
             borderRadius: 2,
             boxShadow: 6,
             display: { xs: 'none', sm: 'block' },
-            ':hover': { cursor: 'pointer' }
+            ':hover': { cursor: 'pointer' },
           }}
-          image={"https://picsum.photos/325/200"}
+          image={image}
           alt={"study"}
-          onClick={() => {window.location.href = '/studyspot'}}
+          onClick={() => router.push(`/studyspot/${id}`)}
         />
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'left', p: 2 }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Typography variant="h5" component="div">
+            <Typography component="div">
               {studyName}
             </Typography>
             <Button
               onClick={handleMenuClick}
-              sx={{ color: 'black', fontWeight: 'bold' }}
+              sx={{ color: 'black', ':hover': { bgcolor: 'gray' } }}
+              size="small"
             >
-              Actions
+              . . .
             </Button>
             <Menu
               anchorEl={anchorEl}
@@ -175,7 +223,8 @@ export default function StudyCard(props) {
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row'}}>
                       <Typography sx={{mt:1.5}} color="text.secondary">
-                          Rating: {ratingState}
+                          Rating: {ratingState.length === 0 ? 0 : (ratingState.map(obj => obj.value).reduce((a, b) => a + b, 0) / ratingState.length).toFixed(1)}
+                          {` (${ratingState.length} ratings)`}
                       </Typography>
           </Box>
           <Box>
@@ -192,7 +241,8 @@ export default function StudyCard(props) {
       </CardContent>
       <CardActions sx={{ mt: -3 }}>
         <Box sx={{ ml: 4, mb: 2}}>
-            <Button sx={{ bgcolor: 'black', color: 'white', ':hover': { bgcolor: 'gray'}}} size="small">Comments</Button>
+            <Button sx={{ bgcolor: 'black', color: 'white', ':hover': { bgcolor: 'gray'}}} size="small"
+            onClick={() => router.push(`/studyspot/${id}`)}>Comments</Button>
         </Box>
       </CardActions>
     </Card>

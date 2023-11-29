@@ -51,7 +51,7 @@ function Map() {
             console.log("Geolocation is not supported by this browser.");
         }
     };
-
+  
     useEffect(() => {
         fetch('/api/study-spaces', { method: 'GET', })
             .then((response) => response.ok && response.json())

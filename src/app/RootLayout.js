@@ -16,6 +16,7 @@ import { useSession } from 'next-auth/react';
 import { Button } from '@mui/material';
 import { signOut } from "next-auth/react"
 import { blueGrey } from '@mui/material/colors';
+import { useRouter } from 'next/navigation';
 
 const theme = createTheme({
   palette: {
@@ -31,13 +32,14 @@ const theme = createTheme({
 export default function RootLayout({ children, title }) {
 
   const { data: session, status }  = useSession();
+  const router = useRouter();
 
   let loginSection;
 
   if (status === 'authenticated') {
     loginSection = <>
-    <Button variant="outlined" color="inherit" href='/profile'>Profile</Button>
-    <Button variant="outlined" color="inherit" onClick={() => signOut()}>Sign Out</Button>
+    <Button variant="outlined" color="inherit" onClick={() => router.push('/profile')}>Profile</Button>
+    <Button variant="outlined" color="inherit" onClick={() => signOut({ callbackUrl: '/'})}>Sign Out</Button>
     </>;
   } else {
     loginSection = <>
