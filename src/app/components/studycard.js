@@ -111,6 +111,7 @@ export default function StudyCard(props) {
             }),
           });
 
+          setRatingLen(updatedRatings.length);
           setRatingState(updatedRatings);
           setRatingNum(ratingNum);
         } else {
