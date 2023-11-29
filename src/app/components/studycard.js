@@ -158,6 +158,7 @@ export default function StudyCard(props) {
             boxShadow: 6,
             display: { xs: 'none', sm: 'block' },
             ':hover': { cursor: 'pointer' },
+            maxHeight: 125,
           }}
           image={image}
           alt={"study"}

@@ -8,7 +8,8 @@ function Map() {
     const [studySpots, setStudySpots] = useState([]);
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
+        libraries: ['geometry']
     })
 
     const [map, setMap] = React.useState(null)
@@ -18,7 +19,6 @@ function Map() {
     })
 
     const onLoad = React.useCallback(function callback(map) {
-        // This is just an example of getting and using the map instance!!! don't just blindly copy!
         findLocation();
         const bounds = new window.google.maps.LatLngBounds(center);
         map.fitBounds(bounds);

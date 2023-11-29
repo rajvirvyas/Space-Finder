@@ -16,7 +16,8 @@ export default function AddSpot() {
   const [ error, setError ] = useState(false);
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
+    libraries: ['geometry']
   })
 
   const [map, setMap] = useState(null)

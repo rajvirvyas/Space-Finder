@@ -2,7 +2,7 @@ import { Box, Slider, TextField, Typography, MenuItem, Select, InputLabel, Chip,
 import React, { useState } from 'react';
 
 export default function Filter(props) {
-    const { search, rating, onSearchChange, onRatingChange } = props;
+    const { search, rating, onSearchChange, onRatingChange, onProxChange } = props;
     const [amenities, setAmenities] = useState([]);
 
     const handleAmenitiesChange = (event) => {
@@ -76,10 +76,12 @@ export default function Filter(props) {
                 <Slider
                     aria-label="Proximity"
                     defaultValue={10}
-                    step={5}
-                    max={50}
+                    step={1}
+                    max={30}
+                    min={1}
                     valueLabelDisplay="auto"
-                    marks={[{value: 0, label: '0 miles'}, {value: 50, label: '50 miles'}]}
+                    onChange={onProxChange}
+                    marks={[{value: 1, label: '1 miles'}, {value: 30, label: '30 miles'}]}
                 />   
             </Box>
             <Box sx={{ width: 0.8 }}>
