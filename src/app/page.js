@@ -19,6 +19,11 @@ export default function Home() {
     setStudies(newStudies);
   }
 
+  function onCapChange(event) {
+    let newStudies = dbStudies.filter((study) => study.capacity >= event.target.value);
+    setStudies(newStudies);
+  }
+
   function onSearchChange(event) {
     setSearch(event.target.value);
     let newStudies = dbStudies.filter((study) => study.name.toLowerCase().includes(event.target.value.toLowerCase()));
@@ -77,7 +82,7 @@ export default function Home() {
       <Box sx={{ display: 'flex', justifyContent: "space-between", p: 1 }}>
         <Filter search={search} rating={rating} 
         onSearchChange={onSearchChange} onRatingChange={onRatingChange}
-        onProxChange={onProxChange}/>
+        onProxChange={onProxChange} onCapChange={onCapChange}/>
         <Box sx={{ display: "flex", justifyContent: 'space-evenly', flexWrap: 'wrap', alignItems: 'center',
                     overflow: 'scroll', maxHeight: '85vh' }}>
           {studies.map((study, index) => (

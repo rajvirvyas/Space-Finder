@@ -2,7 +2,7 @@ import { Box, Slider, TextField, Typography, MenuItem, Select, InputLabel, Chip,
 import React, { useState } from 'react';
 
 export default function Filter(props) {
-    const { search, rating, onSearchChange, onRatingChange, onProxChange } = props;
+    const { search, rating, onSearchChange, onRatingChange, onProxChange, onCapChange } = props;
     const [amenities, setAmenities] = useState([]);
 
     const handleAmenitiesChange = (event) => {
@@ -52,6 +52,22 @@ export default function Filter(props) {
                     max={5}
                     marks={[{value: 1, label: '1'}, {value: 5, label: '5'}]}
                     onChange={onRatingChange}
+                    valueLabelDisplay="auto"
+                />   
+            </Box>
+            <Box sx={{ width: 0.6 }}>
+                <Typography>
+                    Capacity
+                </Typography>
+                <Slider
+                    aria-label="Rating"
+                    size="medium"
+                    step={5}
+                    defaultValue={10}
+                    min={0}
+                    max={50}
+                    marks={[{value: 0, label: '0'}, {value: 50, label: '50+'}]}
+                    onChange={onCapChange}
                     valueLabelDisplay="auto"
                 />   
             </Box>
