@@ -97,7 +97,7 @@ export default function Filter(props) {
                     min={1}
                     valueLabelDisplay="auto"
                     onChange={onProxChange}
-                    marks={[{value: 1, label: '1 miles'}, {value: 30, label: '30 miles'}]}
+                    marks={[{value: 1, label: '1 miles'}, {value: 30, label: '30+ miles'}]}
                 />   
             </Box>
             <Box sx={{ width: 0.8 }}>

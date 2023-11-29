@@ -8,7 +8,7 @@ import {
   Slider,
   Paper,
   Grid,
-  Menu,
+  CardMedia,
   MenuItem,
   Rating
 } from '@mui/material';
@@ -136,16 +136,33 @@ function StudySpot(props) {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Paper elevation={3}>
-            <Box p={2}>
-              <Typography variant="h4" gutterBottom>
-                {spot.name}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                {spot.building}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                School: Cal Poly SLO
-              </Typography>
+            <Box sx={{p:2}}>
+              <Box sx={{display: "flex", flexDirection: 'row', justifyContent: "space-between"}}>
+                <Box>
+                  <Typography variant="h4" gutterBottom>
+                    {spot.name}
+                  </Typography>
+                  <Typography variant="body1" gutterBottom>
+                    {spot.building}
+                  </Typography>
+                  <Typography variant="body1" gutterBottom>
+                    School: Cal Poly SLO
+                  </Typography>
+                </Box>
+                <CardMedia
+          component="img"
+          sx={{
+            borderRadius: 2,
+            boxShadow: 6,
+            display: { xs: 'none', sm: 'block' },
+            ':hover': { cursor: 'pointer' },
+            maxHeight: 125,
+            maxWidth: 300
+          }}
+          image={spot.img}
+          alt={"study"}
+        />
+              </Box>
               {status === "authenticated" ? (
                 <Box display="flex" flexDirection="row" justifyContent="space-around">
               <MenuItem onClick={handleCheckIn}>Check In</MenuItem>

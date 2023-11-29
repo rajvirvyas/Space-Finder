@@ -18,6 +18,7 @@ model User {
   bio          String
   school       String
   profilePic   String
+  savedSpaces  Int[]
   studySpaces  studySpace[]
   comments     comment[]
   reservations reservation[]

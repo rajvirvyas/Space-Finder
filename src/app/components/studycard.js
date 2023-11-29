@@ -20,8 +20,8 @@ import Alert from '@mui/material/Alert';
 import { useRouter } from 'next/navigation';
 
 export default function StudyCard(props) {
-    const { id, studyName, liveStatus, image } = props;
-    const [isStarred, setIsStarred] = useState(false);
+    const { id, studyName, liveStatus, image, saved } = props;
+    const [isStarred, setIsStarred] = useState(saved);
     const [open, setOpen] = useState(false);
     const [ratingState, setRatingState] = useState([]);
     const [ratingNum, setRatingNum] = useState(0);
@@ -52,7 +52,8 @@ export default function StudyCard(props) {
       });
   }, [id]);
 
-  function toggleStar() {
+  function handleSave() {
+    fetch(`/api/save-spot`, { method: 'PUT', body: JSON.stringify({ studySpotId: id })});
     setIsStarred(!isStarred);
   }
   
@@ -149,7 +150,7 @@ export default function StudyCard(props) {
       
     >
       <CardContent>
-      <Button sx={{ position: 'absolute', top: 20, left: 10, zIndex: 1, color: 'black',}} onClick={toggleStar}>
+      <Button sx={{ position: 'absolute', top: 20, left: 10, zIndex: 1, color: 'black',}} onClick={handleSave}>
                 {isStarred ? <BookmarkAddedIcon sx={{fontSize: 30, color: 'white'}} /> : <BookmarkAddIcon sx={{fontSize: 30, color: 'white'}} />}
             </Button>
         <CardMedia

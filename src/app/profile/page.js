@@ -11,7 +11,7 @@ export default function Profile() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [pfp, setPhoto] = useState("/path/to/profile-picture.jpg");
 	const [studySpots, setStudySpots] = useState([]);
-
+	const [savedSpaces, setSavedSpaces] = useState([]);
 	const [user, setUser] = useState({});
 
 	useEffect(() => {
@@ -21,10 +21,15 @@ export default function Profile() {
 				setUser(data);
 				if (data.profilePic !== "" && data.profilePic !== undefined) decodeImage(data.profilePic);
 			});
-		fetch('/api/users/studyspaces', { method: 'get' })
+		fetch('/api/study-spaces', { method: 'get' })
 			.then((response) => response.ok && response.json())
 			.then(data => {
 				setStudySpots(data);
+			});
+		fetch('/api/save-spot', { method: 'get' })
+			.then((response) => response.ok && response.json())
+			.then(data => {
+				setSavedSpaces(data);
 			});
 	}, []);
 
@@ -190,16 +195,14 @@ export default function Profile() {
 			</Box>
 			<Box>
 				<Typography sx={{ m: 6, fontSize: 24 }}>
-					My Study Spots
+					Saved Study Spots
 				</Typography>
 				<Box sx={{ display: 'flex', flexWrap: 'wrap', }}>
-					{studySpots.map((study, index) => (
-						<StudyCard key={index} id={study.id} studyName={study.name} 
-						liveStatus={study.liveStatus} rating={study.rating}
-						image={study.img} />
-					))}
+					{studySpots.map((study, index) => {
+						if (savedSpaces.includes(study.id)) {
+							return (<StudyCard key={index} id={study.id} studyName={study.name} saved={true}
+              				liveStatus={study.liveStatus} rating={study.avgRating} image={study.img} />)
+						}})}
 				</Box>
 			</Box>
-		</>
-	)
-}
+		</>)}

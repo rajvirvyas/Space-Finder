@@ -9,6 +9,7 @@ export default function Home() {
   const [studies, setStudies] = useState([]);
   const [search, setSearch] = useState('');
   const [rating, setRating] = useState(0);
+  const [saved, setSaved] = useState([]);
   const [location, setLocation] = useState({lat: 35.3050, lng: -120.6625});
 
   function onRatingChange(event) {
@@ -61,6 +62,12 @@ export default function Home() {
         setdbStudies(data);
         setStudies(data);
       });
+    fetch('/api/save-spot', { method: 'GET', })
+      .then((response) => response.ok && response.json())
+      .then((data) => {
+        setSaved(data);
+        console.log(data)
+      });
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
             setLocation({
@@ -84,7 +91,7 @@ export default function Home() {
         <Box sx={{ display: "flex", justifyContent: 'space-evenly', flexWrap: 'wrap', alignItems: 'center',
                     overflow: 'scroll', maxHeight: '85vh' }}>
           {studies.map((study, index) => (
-            <StudyCard key={index} id={study.id} studyName={study.name}
+            <StudyCard key={index} id={study.id} studyName={study.name} saved={saved.includes(study.id)}
               liveStatus={study.liveStatus} rating={study.avgRating} image={study.img} />
           ))}
         </Box>
