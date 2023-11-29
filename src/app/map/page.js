@@ -80,6 +80,15 @@ function Map() {
             <Box sx={{display: 'flex', justifyContent: 'center', mt: 2}}>
                 <Button onClick={findLocation} sx={{backgroundColor: 'white', boxShadow: 2}}>Find Me</Button>
             </Box>
+            <Marker position={markerPosition} 
+            icon={
+                {
+                    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/BSicon_lHST_azure.svg/500px-BSicon_lHST_azure.svg.png",
+                    scaledSize: new window.google.maps.Size(40, 40),
+                    origin: new window.google.maps.Point(0, 0),
+                    anchor: new window.google.maps.Point(20, 20),
+                }
+            }/>
             {studySpots.map((spot) => (
                 <Marker onClick={toggleOpen} key={spot.id} position={{ lat: spot.latitude, lng: spot.longitude }} title={spot.name}>
                     {open && <InfoWindow onCloseClick={() => toggleOpen()}>
