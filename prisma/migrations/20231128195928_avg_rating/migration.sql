@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "studySpace" ADD COLUMN     "avgRating" DOUBLE PRECISION NOT NULL DEFAULT 0;

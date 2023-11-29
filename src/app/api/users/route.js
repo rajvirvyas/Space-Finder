@@ -5,7 +5,6 @@ import { checkLoggedIn } from "@/lib/auth";
 
 export async function GET(request) {
   const loggedInData = await checkLoggedIn();
-  console.log(loggedInData);
   if (loggedInData.loggedIn) {
     const user = await prisma.user.findUnique({
       where: {

@@ -18,28 +18,42 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Alert from '@mui/material/Alert';
 import { useRouter } from 'next/navigation';
-import { Star } from '@mui/icons-material';
 
 export default function StudyCard(props) {
-    const { id, studyName, liveStatus, rating, image } = props;
-    const [isStarred, setIsStarred] = useState(false);
+    const { id, studyName, liveStatus, image, saved } = props;
+    const [isStarred, setIsStarred] = useState(saved);
     const [open, setOpen] = useState(false);
     const [ratingState, setRatingState] = useState([]);
+    const [ratingNum, setRatingNum] = useState(0);
+    const [ratingLen, setRatingLen] = useState(0);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [ formState, setFormState ] = useState({});
     const [ error, setError ] = useState(false);
     const router = useRouter();
 
+    useEffect(() => {
+      fetch(`/api/ratings/${id}`, { method: 'GET'})
+        .then((response) => response.ok && response.json())
+        .then((ratings) => {
+          setRatingState(ratings);
+        });
+    }, []);
+
   useEffect(() => {
+    fetch(`/api/study-spaces/${id}`, { method: 'GET'})
+      .then((response) => response.ok && response.json())
+      .then((space) => {
+        setRatingNum(space.avgRating);
+      });
     fetch(`/api/ratings/${id}`, { method: 'GET'})
       .then((response) => response.ok && response.json())
       .then((ratings) => {
-        const values = ratings.map((rating) => ({ userId: rating.userId, value: rating.value }));
-        setRatingState(values);
+        setRatingLen(ratings.length);
       });
-  }, []);
+  }, [id]);
 
-  function toggleStar() {
+  function handleSave() {
+    fetch(`/api/save-spot`, { method: 'PUT', body: JSON.stringify({ studySpotId: id })});
     setIsStarred(!isStarred);
   }
   
@@ -62,7 +76,7 @@ export default function StudyCard(props) {
     const handleRatingChange = async (event, newValue) => {
       try {
         // Send a request to your backend to update the rating
-        const response = await fetch('/api/ratings', {
+        let response = await fetch('/api/ratings', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -86,7 +100,21 @@ export default function StudyCard(props) {
             updatedRatings.push({ userId: responseData.userId, value: responseData.value });
           }
 
+          let ratingNum = updatedRatings.length === 0 ? 0 : (updatedRatings.map(obj => obj.value).reduce((a, b) => a + b, 0) / updatedRatings.length).toFixed(1)
+          response = await fetch(`/api/study-spaces/avg-rating/${id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              studyID: id,
+              avgRating: ratingNum,
+            }),
+          });
+
+          setRatingLen(updatedRatings.length);
           setRatingState(updatedRatings);
+          setRatingNum(ratingNum);
         } else {
           throw new Error('Failed to update rating');
         }
@@ -109,7 +137,7 @@ export default function StudyCard(props) {
     <Card
       sx={{
         mx: 2,
-        mb: 10,
+        my: 2,
         bgcolor: '#dfebe9',
         boxShadow: 6,
         display: 'flex',
@@ -122,7 +150,7 @@ export default function StudyCard(props) {
       
     >
       <CardContent>
-      <Button sx={{ position: 'absolute', top: 20, left: 10, zIndex: 1, color: 'black',}} onClick={toggleStar}>
+      <Button sx={{ position: 'absolute', top: 20, left: 10, zIndex: 1, color: 'black',}} onClick={handleSave}>
                 {isStarred ? <BookmarkAddedIcon sx={{fontSize: 30, color: 'white'}} /> : <BookmarkAddIcon sx={{fontSize: 30, color: 'white'}} />}
             </Button>
         <CardMedia
@@ -132,6 +160,7 @@ export default function StudyCard(props) {
             boxShadow: 6,
             display: { xs: 'none', sm: 'block' },
             ':hover': { cursor: 'pointer' },
+            maxHeight: 125,
           }}
           image={image}
           alt={"study"}
@@ -156,12 +185,12 @@ export default function StudyCard(props) {
             >
               <MenuItem onClick={handleCheckIn}>Check In</MenuItem>
               <MenuItem onClick={handleMenuClose}>Rate: 
-              <Rating
-            name="rating"
-            value={ratingState}
-            precision={0.5}
-            onChange={handleRatingChange}/>
-          </MenuItem>
+                  <Rating
+                name="rating"
+                value={ratingNum}
+                precision={0.5}
+                onChange={handleRatingChange}/>
+              </MenuItem>
               <MenuItem onClick={handleReportButton}>Report</MenuItem>
               </Menu>
               {/* -------------------------------- */}
@@ -223,8 +252,8 @@ export default function StudyCard(props) {
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row'}}>
                       <Typography sx={{mt:1.5}} color="text.secondary">
-                          Rating: {ratingState.length === 0 ? 0 : (ratingState.map(obj => obj.value).reduce((a, b) => a + b, 0) / ratingState.length).toFixed(1)}
-                          {` (${ratingState.length} ratings)`}
+                          Rating: {ratingNum}
+                          {` (${ratingLen} ratings)`}
                       </Typography>
           </Box>
           <Box>

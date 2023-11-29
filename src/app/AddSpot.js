@@ -34,7 +34,6 @@ export default function AddSpot() {
 }, []);
 
   const onLoad = useCallback(function callback(map) {
-      // This is just an example of getting and using the map instance!!! don't just blindly copy!
       findLocation()
       const bounds = new window.google.maps.LatLngBounds(center);
       map.fitBounds(bounds);
@@ -105,7 +104,7 @@ export default function AddSpot() {
             To Add a new spot, please fill in the following fields.
           </DialogContentText>
           { error ? (
-            <Alert severity="error">There was an issue submitting the study spot, please adjust the fields and try again.</Alert>
+            <Alert severity="error">There was an issue submitting the study spot, please adjust the fields or log in and try again.</Alert>
           ) : null }
           <TextField
             onChange={(e) => setFormState({...formState, spotName: e.target.value})}

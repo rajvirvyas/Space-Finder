@@ -18,6 +18,7 @@ model User {
   bio          String
   school       String
   profilePic   String
+  savedSpaces  Int[]
   studySpaces  studySpace[]
   comments     comment[]
   reservations reservation[]
@@ -38,6 +39,7 @@ model studySpace {
   reservations reservation[]
   img          String
   rating       Rating[]
+  avgRating    Float         @default(0)
 }
 
 model Rating {
