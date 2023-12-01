@@ -16,7 +16,7 @@ export async function PUT(request, { params }) {
   const loggedInData = await checkLoggedIn();
   const id = +params.id;
   if (loggedInData.loggedIn && id) {
-    const { rating, busyness, comments, reservations } = await request.json();
+    const { rating, busyness, comments, reservations, flagged } = await request.json();
     console.log("finding", {id, rating, busyness, comments, reservations});
     try {
       const ss = await prisma.studySpace.update({
@@ -27,7 +27,8 @@ export async function PUT(request, { params }) {
           rating,
           busyness,
           comments,
-          reservations
+          reservations,
+          flagged
         }
       });
       return NextResponse.json(ss);

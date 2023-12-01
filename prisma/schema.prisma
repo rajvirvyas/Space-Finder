@@ -35,6 +35,7 @@ model studySpace {
   ownerId      Int
   capacity     Int
   busyness     Float
+  flagged      Boolean       @default(false)
   comments     comment[]
   reservations reservation[]
   img          String
