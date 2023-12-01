@@ -177,7 +177,7 @@ function StudySpot(props) {
               <MenuItem>Report</MenuItem>
                 </Box>
               ) : (
-                <Box display="flex" flexDirection="column" alignItems="center">
+                <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", mt: 2}} >
                   <Alert severity="warning">Must be signed in to Rate or Report</Alert>
                   <Button disabled>Rate</Button>
                   <Button disabled>Report</Button>

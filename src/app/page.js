@@ -115,7 +115,8 @@ export default function Home() {
                     overflow: 'scroll', maxHeight: '85vh' }}>
           {studies.map((study, index) => (
             <StudyCard key={index} id={study.id} studyName={study.name} saved={saved.includes(study.id)}
-              liveStatus={study.liveStatus} rating={study.avgRating} image={study.img} />
+            distance={getDistance(location.lat, location.lng, study.latitude, study.longitude).toFixed(2)}
+            liveStatus={study.liveStatus} rating={study.avgRating} image={study.img} />
           ))}
         </Box>
       </Box>
