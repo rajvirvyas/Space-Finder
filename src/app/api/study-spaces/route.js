@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { checkLoggedIn } from "@/lib/auth";
 
-export async function GET(request) {
+export async function GET() {
     const studySpaces = await prisma.studySpace.findMany({});
     return NextResponse.json(studySpaces);
 }

@@ -57,28 +57,51 @@ export default function Home() {
 
   useEffect(() => {
     fetch('/api/study-spaces', { method: 'GET', })
-      .then((response) => response.ok && response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Error fetching study spaces');
+        }
+      })
       .then((data) => {
         setdbStudies(data);
         setStudies(data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
+
     fetch('/api/save-spot', { method: 'GET', })
-      .then((response) => response.ok && response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Error fetching saved spots');
+        }
+      })
       .then((data) => {
         setSaved(data);
-        console.log(data)
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-            setLocation({
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            });
-        }, (error) => {
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
           console.log(error);
-        });
+        }
+      );
     } else {
-        console.log("Geolocation is not supported by this browser.");
+      console.log("Geolocation is not supported by this browser.");
     }
   }, []);
 
