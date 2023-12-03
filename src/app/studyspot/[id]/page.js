@@ -75,10 +75,39 @@ function StudySpot(props) {
         setAnchorEl(null); // Close the menu when "Check In" is clicked
         displayCheckInMessage(); // Function to display a pop-up message
       };
+
+      const flagSpot = async () => {
+        // set the flagged field for this study spot to true
+        try {
+          // Send a request to your backend to update the rating
+          let response = await fetch(`/api/study-spaces/${params.id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              flagged: true,
+            }),
+          });
+
+          if(response.ok) {
+            displayFlaggedSpotMessage();
+          } else {
+            throw new Error('Failed to update rating');
+          }
+        } catch (error) {
+          console.error(error);
+          // Handle the error here, e.g. display an error message to the user
+        }
+    }
     
       const displayCheckInMessage = () => {
         alert('Yay! You\'ve checked in.');
       };
+
+      const displayFlaggedSpotMessage = () => {
+        alert('This spot has been flagged, sorry for the inconvenience.');
+      }
       
       const handleRatingChange = async (event, newValue) => {
         try {
@@ -174,7 +203,7 @@ function StudySpot(props) {
                   {ratingNum} {` (${ratingLen} ratings)`}
                 </Typography>
               </Box>
-              <MenuItem>Report</MenuItem>
+              <MenuItem onClick={flagSpot}>Report</MenuItem>
                 </Box>
               ) : (
                 <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", mt: 2}} >

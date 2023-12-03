@@ -4,6 +4,7 @@ import { checkLoggedIn } from "@/lib/auth";
 
 export async function GET() {
     const studySpaces = await prisma.studySpace.findMany({});
+    console.log(studySpaces);
     return NextResponse.json(studySpaces);
 }
 

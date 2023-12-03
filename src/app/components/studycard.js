@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
+import FlagIcon from '@mui/icons-material/Flag';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
@@ -22,6 +23,7 @@ import { useRouter } from 'next/navigation';
 export default function StudyCard(props) {
     const { id, studyName, liveStatus, distance, image, saved } = props;
     const [isStarred, setIsStarred] = useState(saved);
+    const [isFlagged, setIsFlagged] = useState(false);
     const [open, setOpen] = useState(false);
     const [ratingState, setRatingState] = useState([]);
     const [ratingNum, setRatingNum] = useState(0);
@@ -44,6 +46,7 @@ export default function StudyCard(props) {
       .then((response) => response.ok && response.json())
       .then((space) => {
         setRatingNum(space.avgRating);
+        setIsFlagged(space.flagged);
       });
     fetch(`/api/ratings/${id}`, { method: 'GET'})
       .then((response) => response.ok && response.json())
@@ -150,9 +153,13 @@ export default function StudyCard(props) {
       
     >
       <CardContent>
+      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
       <Button sx={{ position: 'absolute', top: 20, left: 10, zIndex: 1, color: 'black',}} onClick={handleSave}>
                 {isStarred ? <BookmarkAddedIcon sx={{fontSize: 30, color: 'white'}} /> : <BookmarkAddIcon sx={{fontSize: 30, color: 'white'}} />}
             </Button>
+      {isFlagged ? <FlagIcon sx={{fontSize: 35, position: 'absolute', top: 20, right: 10, zIndex: 1, color: 'red'}} /> : null}
+      </Box>
+        
         <CardMedia
           component="img"
           sx={{
