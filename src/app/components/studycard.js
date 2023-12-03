@@ -30,6 +30,9 @@ export default function StudyCard(props) {
     const [ratingLen, setRatingLen] = useState(0);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [ formState, setFormState ] = useState({});
+    const [name, setName] = useState('');
+    const [spotName, setSpotName] = useState('');
+    const [reason, setReason] = useState('');
     const [ error, setError ] = useState(false);
     const router = useRouter();
 
@@ -58,6 +61,36 @@ export default function StudyCard(props) {
   function handleSave() {
     fetch(`/api/save-spot`, { method: 'PUT', body: JSON.stringify({ studySpotId: id })});
     setIsStarred(!isStarred);
+  }
+
+  function handleSubmittedReview() {
+    if (name && name.length && spotName && spotName.length && reason && reason.length) {
+        fetch("/api/report", { method: "post", body: JSON.stringify({
+          userName: name,
+          spotName: spotName,
+          reason: reason,
+          studySpaceId: id
+          }) } );
+        // Send a request to your backend to update the rating
+        fetch(`/api/study-spaces/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            flagged: true,
+          }),
+        });
+        setOpen(false);
+        displayFlaggedSpotMessage();
+        setName('');
+        setSpotName('');
+        setReason('');
+    }
+  }
+      
+  const displayFlaggedSpotMessage = () => {
+    alert('This spot has been flagged, sorry for the inconvenience.');
   }
   
     const handleMenuClick = (event) => {
@@ -218,40 +251,47 @@ export default function StudyCard(props) {
             <Alert severity="error">There was an issue submitting the report, please adjust the fields and try again.</Alert>
           ) : null }
           <TextField
-            autoFocus
+            margin="dense"
+            id="name"
+            name="name"
+            label="Name"
+            type="name"
+            required
+            fullWidth
+            variant='standard'
+            onChange={e => {
+              setName(e.target.value);
+            }}/>
+          <TextField
             margin="dense"
             id="spotName"
             name="spotName"
             label="Spot Name"
             type="spotName"
+            required
+            fullWidth
+            variant='standard'
+            onChange={e => {
+              setSpotName(e.target.value);
+            }}/>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="reason"
+            name="reason"
+            label="Reason For Report"
+            type="reason"
             fullWidth
             variant="standard"
+            onChange={e => {
+              setReason(e.target.value);
+            }}
             required
-     
           />
-          <TextField
-            margin="dense"
-            id="building"
-            name="building"
-            label="Building"
-            type="building"
-            required
-            fullWidth
-            variant='standard'/>
-          <TextField
-            margin="dense"
-            name="capacity"
-            id="SpotCap"
-            label="Spot Capacity"
-            inputProps={{min: 0}}
-            type="number"
-            required
-            fullWidth
-            variant='standard'/>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Submit for Review</Button>
+          <Button type="submit" onClick={handleSubmittedReview}>Submit for Review</Button>
         </DialogActions>
         
       </Dialog>}

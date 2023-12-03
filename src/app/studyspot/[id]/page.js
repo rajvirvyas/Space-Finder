@@ -5,7 +5,13 @@ import {
   Button,
   Alert,
   Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
   Slider,
+  TextField,
   Paper,
   Grid,
   CardMedia,
@@ -24,6 +30,11 @@ function StudySpot(props) {
   const { data: session, status }  = useSession();
 
     const [open, setOpen] = useState(false);
+    const [reportOpen, setReportOpen] = useState(false);
+    const [name, setName] = useState("");
+    const [error, setError] = useState(false);
+    const [spotName, setSpotName] = useState("")
+    const [reason, setReason] = useState("");
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY
@@ -67,6 +78,33 @@ function StudySpot(props) {
         setMap(null)
     }, [])  
 
+    function flagSpot() {
+
+      if (name && name.length && spotName && spotName.length && reason && reason.length) {
+        fetch("/api/report", { method: "post", body: JSON.stringify({
+          userName: name,
+          spotName: spotName,
+          reason: reason,
+          studySpaceId: parseInt(params.id)
+          }) } );
+        // Send a request to your backend to update the rating
+        fetch(`/api/study-spaces/${params.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            flagged: true,
+          }),
+        });
+        setReportOpen(false);
+        displayFlaggedSpotMessage();
+        setName("");
+        setSpotName("");
+        setReason("");
+    }
+  }
+
     function toggleOpen() {
       setOpen(!open);
     }
@@ -76,29 +114,62 @@ function StudySpot(props) {
         displayCheckInMessage(); // Function to display a pop-up message
       };
 
-      const flagSpot = async () => {
-        // set the flagged field for this study spot to true
-        try {
-          // Send a request to your backend to update the rating
-          let response = await fetch(`/api/study-spaces/${params.id}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              flagged: true,
-            }),
-          });
-
-          if(response.ok) {
-            displayFlaggedSpotMessage();
-          } else {
-            throw new Error('Failed to update rating');
-          }
-        } catch (error) {
-          console.error(error);
-          // Handle the error here, e.g. display an error message to the user
-        }
+      const getReportDialog = () => {
+        return (<Dialog open={reportOpen} onClose={() => setReportOpen(false)}>
+        <DialogTitle>Report Study Spot</DialogTitle>
+        
+        <DialogContent>
+          <DialogContentText>
+            To Report any inaccuracies, please fill in the following fields.
+          </DialogContentText>
+          { error ? (
+            <Alert severity="error">There was an issue submitting the report, please adjust the fields and try again.</Alert>
+          ) : null }
+          <TextField
+            margin="dense"
+            id="name"
+            name="name"
+            label="Name"
+            type="name"
+            required
+            fullWidth
+            variant='standard'
+            onChange={e => {
+              setName(e.target.value);
+            }}/>
+          <TextField
+            margin="dense"
+            id="spotName"
+            name="spotName"
+            label="Spot Name"
+            type="spotName"
+            required
+            fullWidth
+            variant='standard'
+            onChange={e => {
+              setSpotName(e.target.value);
+            }}/>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="reason"
+            name="reason"
+            label="Reason For Report"
+            type="reason"
+            fullWidth
+            variant="standard"
+            onChange={e => {
+              setReason(e.target.value);
+            }}
+            required
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setReportOpen(false)}>Cancel</Button>
+          <Button type="submit" onClick={flagSpot}>Submit for Review</Button>
+        </DialogActions>
+        
+      </Dialog>);
     }
     
       const displayCheckInMessage = () => {
@@ -203,7 +274,8 @@ function StudySpot(props) {
                   {ratingNum} {` (${ratingLen} ratings)`}
                 </Typography>
               </Box>
-              <MenuItem onClick={flagSpot}>Report</MenuItem>
+              <MenuItem onClick={() => setReportOpen(true)}>Report</MenuItem>
+              {reportOpen && getReportDialog()}
                 </Box>
               ) : (
                 <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", mt: 2}} >
