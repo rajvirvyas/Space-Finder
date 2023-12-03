@@ -57,28 +57,51 @@ export default function Home() {
 
   useEffect(() => {
     fetch('/api/study-spaces', { method: 'GET', })
-      .then((response) => response.ok && response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Error fetching study spaces');
+        }
+      })
       .then((data) => {
         setdbStudies(data);
         setStudies(data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
+
     fetch('/api/save-spot', { method: 'GET', })
-      .then((response) => response.ok && response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Error fetching saved spots');
+        }
+      })
       .then((data) => {
         setSaved(data);
-        console.log(data)
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-            setLocation({
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            });
-        }, (error) => {
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
           console.log(error);
-        });
+        }
+      );
     } else {
-        console.log("Geolocation is not supported by this browser.");
+      console.log("Geolocation is not supported by this browser.");
     }
   }, []);
 
@@ -92,7 +115,8 @@ export default function Home() {
                     overflow: 'scroll', maxHeight: '85vh' }}>
           {studies.map((study, index) => (
             <StudyCard key={index} id={study.id} studyName={study.name} saved={saved.includes(study.id)}
-              liveStatus={study.liveStatus} rating={study.avgRating} image={study.img} />
+            distance={getDistance(location.lat, location.lng, study.latitude, study.longitude).toFixed(2)}
+            liveStatus={study.liveStatus} rating={study.avgRating} image={study.img} />
           ))}
         </Box>
       </Box>

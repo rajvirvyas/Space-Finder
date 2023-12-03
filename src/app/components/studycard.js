@@ -21,7 +21,7 @@ import Alert from '@mui/material/Alert';
 import { useRouter } from 'next/navigation';
 
 export default function StudyCard(props) {
-    const { id, studyName, liveStatus, image, saved } = props;
+    const { id, studyName, liveStatus, distance, image, saved } = props;
     const [isStarred, setIsStarred] = useState(saved);
     const [isFlagged, setIsFlagged] = useState(false);
     const [open, setOpen] = useState(false);
@@ -175,9 +175,14 @@ export default function StudyCard(props) {
         />
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'left', p: 2 }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Typography component="div">
-              {studyName}
-            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography>
+                {studyName}
+              </Typography>
+              <Typography sx={{ fontSize: 10 }} color="text.secondary">
+                {distance} miles away
+              </Typography>
+            </Box>
             <Button
               onClick={handleMenuClick}
               sx={{ color: 'black', ':hover': { bgcolor: 'gray' } }}
