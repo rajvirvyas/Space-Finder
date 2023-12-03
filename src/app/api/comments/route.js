@@ -22,7 +22,7 @@ export async function POST(request) {
   const loggedInData = await checkLoggedIn();
   if (loggedInData.loggedIn) {
     const { ssid, text } = await request.json();
-    const cmnt = await prisma.comment.create({
+    const cmnt = await prisma.reports.create({
       data: {
         text,
         ownerId: loggedInData.user?.id,
