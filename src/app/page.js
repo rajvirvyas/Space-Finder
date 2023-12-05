@@ -55,6 +55,24 @@ export default function Home() {
         return Value * Math.PI / 180;
     }
 
+    useEffect(() => {
+      fetch('/api/study-spaces', { method: 'GET', })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Error fetching study spaces');
+        }
+      })
+      .then((data) => {
+        setdbStudies(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }, [onRatingChange]);
+  
+
   useEffect(() => {
     fetch('/api/study-spaces', { method: 'GET', })
       .then((response) => {
