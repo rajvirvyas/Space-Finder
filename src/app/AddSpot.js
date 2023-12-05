@@ -52,6 +52,7 @@ export default function AddSpot() {
 
   function handleClose() {
     setOpen(false);
+    setError(false)
   }
 
   const findLocation = () => {
