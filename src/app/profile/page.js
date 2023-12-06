@@ -201,7 +201,8 @@ export default function Profile() {
 					{studySpots.map((study, index) => {
 						if (savedSpaces.includes(study.id)) {
 							return (<StudyCard key={index} id={study.id} studyName={study.name} saved={true}
-              				liveStatus={study.liveStatus} rating={study.avgRating} image={study.img} />)
+              				liveStatus={study.liveStatus} amenities={study.amenities} rating={study.avgRating} 
+							image={study.img} />)
 						}})}
 				</Box>
 			</Box>

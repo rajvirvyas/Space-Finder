@@ -23,6 +23,13 @@ export default function Home() {
     setStudies(newStudies);
   }
 
+  function onAmenitiesChange(selectedAmenities) {
+    let newStudies = dbStudies.filter((study) => {
+      return selectedAmenities.every((amenity) => study.amenities.includes(amenity));
+    });
+    setStudies(newStudies);
+  }
+
   function onSearchChange(event) {
     setSearch(event.target.value);
     let newStudies = dbStudies.filter((study) => study.name.toLowerCase().includes(event.target.value.toLowerCase()));
@@ -128,13 +135,13 @@ export default function Home() {
       <Box sx={{ display: 'flex', justifyContent: "space-between", p: 1 }}>
         <Filter search={search} rating={rating} 
         onSearchChange={onSearchChange} onRatingChange={onRatingChange}
-        onProxChange={onProxChange} onCapChange={onCapChange}/>
+        onProxChange={onProxChange} onCapChange={onCapChange} onAmenitiesChange={onAmenitiesChange}/>
         <Box sx={{ display: "flex", justifyContent: 'space-evenly', flexWrap: 'wrap', alignItems: 'center',
-                    overflow: 'scroll', maxHeight: '85vh' }}>
+                    overflow: 'scroll', maxHeight: '100vh' }}>
           {studies.map((study, index) => (
             <StudyCard key={index} id={study.id} studyName={study.name} saved={saved.includes(study.id)}
             distance={getDistance(location.lat, location.lng, study.latitude, study.longitude).toFixed(2)}
-            liveStatus={study.liveStatus} rating={study.avgRating} image={study.img} />
+            liveStatus={study.liveStatus} rating={study.avgRating} amenities={study.amenities} image={study.img} />
           ))}
         </Box>
       </Box>

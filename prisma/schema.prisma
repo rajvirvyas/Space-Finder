@@ -37,6 +37,7 @@ model studySpace {
   capacity     Int
   busyness     Float
   flagged      Boolean       @default(false)
+  amenities    String[]
   comments     comment[]
   reports      report[]
   reservations reservation[]

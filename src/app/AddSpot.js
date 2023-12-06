@@ -9,6 +9,14 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Alert from '@mui/material/Alert';
 import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 
 export default function AddSpot() {
   const [ open, setOpen ] = useState(false);
@@ -19,19 +27,46 @@ export default function AddSpot() {
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY
   })
 
+  const amenitiesList = [
+    'Wifi',
+    'Coffee',
+    'Printer',
+    'Whiteboard',
+    'Projector',
+    'Kitchen',
+    'Parking',
+    'Bike Rack',
+    'Bathroom',
+    'Water Fountain',
+    'Microwave',
+    'Vending Machine',
+  ];
+
+  const ITEM_HEIGHT = 48;
+    const ITEM_PADDING_TOP = 8;
+    const MenuProps = {
+    PaperProps: {
+        style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+        },
+    },
+    };
+
   const [map, setMap] = useState(null)
   const [center, setCenter] = useState({
       lat: 35.305,
       lng: -120.6625
   })
   const [markerPosition, setMarkerPosition] = useState(center);
+  const [selectedAmenities, setSelectedAmenities] = useState([]);
 
   const onMapDoubleClick = useCallback((event) => {
     setMarkerPosition({
         lat: event.latLng.lat(),
         lng: event.latLng.lng()
     });
-}, []);
+  }, []);
 
   const onLoad = useCallback(function callback(map) {
       findLocation()
@@ -81,6 +116,7 @@ export default function AddSpot() {
         longitude: markerPosition.lng,
         latitude: markerPosition.lat,
         capacity: formState.capacity,
+        amenities: selectedAmenities,
         rating: [],
         busyness: 0,
         img: "https://content-calpoly-edu.s3.amazonaws.com/foundation/1/images/20130820_science-math_app_0072%20%2875%25%29.jpg",
@@ -93,6 +129,10 @@ export default function AddSpot() {
       }
     });
   }
+
+  const handleAmenityChange = (event) => {
+    setSelectedAmenities(event.target.value);
+  };
 
   return (
     <>
@@ -140,6 +180,36 @@ export default function AddSpot() {
             required
             fullWidth
             variant='standard'/>
+            <Box sx={{ display: 'flex', gap: 4}}>
+                    <FormControl sx={{ m: 1, width: "100vw" }}>
+                    <InputLabel>Amenities</InputLabel>
+                    <Select
+                        id="amenities"
+                        multiple
+                        value={selectedAmenities}
+                        onChange={handleAmenityChange}
+                        label="Amenities"
+                        renderValue={() => (
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                              {selectedAmenities.map((value) => (
+                                <Chip key={value} label={value} />
+                              ))}
+                            </Box>
+                          )}
+                          MenuProps={MenuProps}
+                        >
+                          {amenitiesList.map((amenity) => (
+                            <MenuItem
+                              key={amenity}
+                              value={amenity}
+                            >
+                                <Checkbox checked={selectedAmenities.indexOf(amenity) > -1} />
+                                <ListItemText primary={amenity} />
+                            </MenuItem>
+                          ))}
+                    </Select>
+                    </FormControl>
+                </Box>
             
           {isLoaded ? (
                 <GoogleMap
@@ -172,5 +242,3 @@ export default function AddSpot() {
     </>
   );
 }
-
-

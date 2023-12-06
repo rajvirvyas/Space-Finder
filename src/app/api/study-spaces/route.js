@@ -17,6 +17,7 @@ export async function POST(request) {
             longitude, 
             latitude, 
             capacity,
+            amenities,
             busyness,
             img
          } = await request.json();
@@ -30,6 +31,7 @@ export async function POST(request) {
             latitude,
             capacity,
             busyness,
+            amenities,
             img
         }
         });

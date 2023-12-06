@@ -2,11 +2,13 @@ import { Box, Slider, TextField, Typography, MenuItem, Select, InputLabel, Chip,
 import React, { useState } from 'react';
 
 export default function Filter(props) {
-    const { search, rating, onSearchChange, onRatingChange, onProxChange, onCapChange } = props;
+    const { search, rating, onSearchChange, onRatingChange, 
+        onProxChange, onCapChange, onAmenitiesChange } = props;
     const [amenities, setAmenities] = useState([]);
 
     const handleAmenitiesChange = (event) => {
         setAmenities(event.target.value);
+        onAmenitiesChange(event.target.value);
     };
 
     const amenitiesList = [
@@ -18,7 +20,11 @@ export default function Filter(props) {
         'Kitchen',
         'Parking',
         'Bike Rack',
-    ];
+        'Bathroom',
+        'Water Fountain',
+        'Microwave',
+        'Vending Machine',
+      ];
 
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
