@@ -45,6 +45,7 @@ function StudySpot(props) {
     const [map, setMap] = React.useState(null)
     const [ratingState, setRatingState] = useState([]);
     const [ratingNum, setRatingNum] = useState(0);
+    const [amenities, setAmenities] = useState([]);
     const [ratingLen, setRatingLen] = useState(0);
     const [center, setCenter] = React.useState({
         lat: 35.305,
@@ -56,6 +57,7 @@ function StudySpot(props) {
           .then((response) => response.ok && response.json())
           .then((data) => {
             setSpot(data);
+            setAmenities(data.amenities);
             setRatingNum(data.avgRating);
             setCenter({lat: data.latitude, lng: data.longitude});
             fetch(`/api/ratings/${data.id}`, { method: 'GET'})
@@ -338,7 +340,7 @@ function StudySpot(props) {
               <Typography variant="h4" component="h3">
                 Amenities
               </Typography>
-              <AmenitiesList />
+              <AmenitiesList amenities={amenities}/>
             </Box>
           </Paper>
         </Grid>

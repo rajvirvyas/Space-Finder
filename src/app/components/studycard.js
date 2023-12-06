@@ -21,7 +21,7 @@ import Alert from '@mui/material/Alert';
 import { useRouter } from 'next/navigation';
 
 export default function StudyCard(props) {
-    const { id, studyName, liveStatus, distance, image, saved } = props;
+    const { id, studyName, saved, distance, liveStatus, amenities, image } = props;
     const [isStarred, setIsStarred] = useState(saved);
     const [isFlagged, setIsFlagged] = useState(false);
     const [open, setOpen] = useState(false);
@@ -42,7 +42,7 @@ export default function StudyCard(props) {
         .then((ratings) => {
           setRatingState(ratings);
         });
-    }, []);
+    }, [id]);
 
   useEffect(() => {
     fetch(`/api/study-spaces/${id}`, { method: 'GET'})
@@ -310,12 +310,19 @@ export default function StudyCard(props) {
           </Box>
           <Box>
             <Typography sx={{ mt: 1.5 }} color="text.secondary">
-              Top Amenities:
+              Included Amenities:
             </Typography>
             <List>
-              <ListItem>1. Wifi</ListItem>
-              <ListItem>2. Bathroom</ListItem>
-              <ListItem>3. Air Conditioning</ListItem>
+              {amenities.slice(0, 3).map((amenity, index) => (
+                <ListItem key={index}>
+                  - {amenity || '-'}
+                </ListItem>
+              ))}
+              {amenities.length < 3 && Array.from({ length: 3 - amenities.length }).map((_, index) => (
+                <ListItem key={index + amenities.length}>
+                  -
+                </ListItem>
+              ))}
             </List>
           </Box>
         </Box>
