@@ -6,7 +6,7 @@ export async function PUT(request, { params }) {
   const loggedInData = await checkLoggedIn();
   const id = parseInt(params.id);
   if (loggedInData.loggedIn && id) {
-    const { text } = await request.json();
+    const { text, votes } = await request.json();
     console.log("finding", {id, text, ownerId: loggedInData.user.id});
     try {
       const cmnt = await prisma.comment.update({
@@ -14,7 +14,8 @@ export async function PUT(request, { params }) {
           id, ownerId: loggedInData.user.id
         }, 
         data: {
-          text
+          text: text,
+          votes: votes
         }
       });
       return NextResponse.json(cmnt);
