@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
-import FlagIcon from '@mui/icons-material/Flag';
+import FlagIcon from '@mui/icons-material/Warning';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
@@ -101,8 +101,8 @@ export default function StudyCard(props) {
       setAnchorEl(null);
     };
     const handleCheckIn = () => {
-      setAnchorEl(null); // Close the menu when "Check In" is clicked
-      displayCheckInMessage(); // Function to display a pop-up message
+      setAnchorEl(null); 
+      displayCheckInMessage(); 
     };
   
     const displayCheckInMessage = () => {
@@ -111,7 +111,6 @@ export default function StudyCard(props) {
     
     const handleRatingChange = async (event, newValue) => {
       try {
-        // Send a request to your backend to update the rating
         let response = await fetch('/api/ratings', {
           method: 'PUT',
           headers: {
@@ -156,7 +155,7 @@ export default function StudyCard(props) {
         }
       } catch (error) {
         console.error(error);
-        // Handle the error here, e.g. display an error message to the user
+        
       }
     };
 
@@ -188,9 +187,9 @@ export default function StudyCard(props) {
       <CardContent>
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
       <Button sx={{ position: 'absolute', top: 20, left: 10, zIndex: 1, color: 'black',}} onClick={handleSave}>
-                {isStarred ? <BookmarkAddedIcon sx={{fontSize: 30, color: 'white'}} /> : <BookmarkAddIcon sx={{fontSize: 30, color: 'white'}} />}
+                {isStarred ? <BookmarkAddedIcon sx={{fontSize: 30, color: 'darkred',stroke: 'black',}} /> : <BookmarkAddIcon sx={{fontSize: 30, color: 'white', stroke: 'black'}} />}
             </Button>
-      {isFlagged ? <FlagIcon sx={{fontSize: 35, position: 'absolute', top: 20, right: 10, zIndex: 1, color: 'red'}} /> : null}
+            {isFlagged ? (<FlagIcon sx={{fontSize: 35, position: 'absolute', top: 20, right: 10, zIndex: 1, color: 'gold',stroke: 'black',}} /> ): null}
       </Box>
         
         <CardMedia
@@ -209,7 +208,7 @@ export default function StudyCard(props) {
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'left', p: 2 }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography>
+              <Typography sx={{ textTransform: 'capitalize',fontFamily: 'Lucida Grande',fontWeight: 'bold' }}>
                 {studyName}
               </Typography>
               <Typography sx={{ fontSize: 10 }} color="text.secondary">

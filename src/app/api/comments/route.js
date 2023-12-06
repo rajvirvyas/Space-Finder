@@ -26,7 +26,8 @@ export async function POST(request) {
       data: {
         text,
         ownerId: loggedInData.user?.id,
-        studySpaceId: ssid
+        studySpaceId: ssid,
+        votes: 0
       }
     });
     return NextResponse.json(cmnt);

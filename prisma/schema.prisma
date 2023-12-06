@@ -63,6 +63,7 @@ model comment {
   ownerId      Int
   studySpace   studySpace @relation(fields: [studySpaceId], references: [id])
   studySpaceId Int
+  votes Int
 }
 
 model reservation {
