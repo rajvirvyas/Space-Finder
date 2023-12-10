@@ -137,7 +137,6 @@ export default function AddSpot() {
   return (
     <>
       <Button variant="underlined" color="inherit" onClick={handleAddButton}>Add Spot</Button>
-      {open && 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add Study Spot</DialogTitle>
         <DialogContent>
@@ -238,7 +237,7 @@ export default function AddSpot() {
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={submitSpot} type="submit">Submit for Review</Button>
         </DialogActions>
-      </Dialog>}
+      </Dialog>
     </>
   );
 }

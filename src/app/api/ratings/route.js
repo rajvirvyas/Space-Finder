@@ -4,11 +4,14 @@ import { checkLoggedIn } from "@/lib/auth";
 
 export async function PUT(request) {
     const loggedInData = await checkLoggedIn();
+
     if (loggedInData.loggedIn) {
         let { 
             value,
-            studySpaceID
+            studySpaceID,
+            comment,
          } = await request.json();
+
         const rating = await prisma.Rating.upsert({
             where: {
                 userId_studySpaceId: {
@@ -17,12 +20,14 @@ export async function PUT(request) {
                 }
             },
             update: {
-                value
+                value,
+                comment,
             },
             create: {
                 value,
                 userId: loggedInData.user?.id,
                 studySpaceId: studySpaceID,
+                comment,
             }
         });
         return NextResponse.json(rating);
