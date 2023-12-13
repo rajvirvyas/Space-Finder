@@ -12,7 +12,6 @@ export async function PUT(request, { params }) {
     if (password != undefined) {
       hashedPassword = await bcrypt.hash(password, 10);
     }
-    console.log("finding", {id, username, email, password, bio, school, studySpaces, comments, reservations});
     try {
       const u = await prisma.user.update({
         where: {

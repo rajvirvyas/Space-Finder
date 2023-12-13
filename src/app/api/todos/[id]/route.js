@@ -7,7 +7,6 @@ export async function PUT(request, { params }) {
    const id = parseInt(params.id);
    if (loggedInData.loggedIn && id) {
     const { value, done } = await request.json();
-    console.log("finding", {id, done, value, ownerId: loggedInData.user.id});
     try {
       const todo = await prisma.toDo.update({
         where: {

@@ -10,10 +10,12 @@ export default function Home() {
   const [search, setSearch] = useState('');
   const [rating, setRating] = useState(0);
   const [saved, setSaved] = useState([]);
+  const [ratingSwap, setRatingSwap] = useState(false);
   const [location, setLocation] = useState({lat: 35.3050, lng: -120.6625});
 
   function onRatingChange(event) {
     setRating(event.target.value);
+    setRatingSwap(!ratingSwap); // This is a hack to force the useEffect to run again
     let newStudies = dbStudies.filter((study) => study.avgRating >= event.target.value);
     setStudies(newStudies);
   }
@@ -61,23 +63,6 @@ export default function Home() {
     {
         return Value * Math.PI / 180;
     }
-
-    useEffect(() => {
-      fetch('/api/study-spaces', { method: 'GET', })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Error fetching study spaces');
-        }
-      })
-      .then((data) => {
-        setdbStudies(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    }, [onRatingChange]);
   
 
   useEffect(() => {
@@ -91,7 +76,9 @@ export default function Home() {
       })
       .then((data) => {
         setdbStudies(data);
-        setStudies(data);
+        if(studies.length == 0) {
+          setStudies(data);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -107,7 +94,6 @@ export default function Home() {
       })
       .then((data) => {
         setSaved(data);
-        console.log(data);
       })
       .catch((error) => {
         console.log(error);
@@ -128,7 +114,7 @@ export default function Home() {
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
-  }, []);
+  }, [ratingSwap]);
 
   return (
     <>
