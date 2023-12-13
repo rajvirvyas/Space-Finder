@@ -40,7 +40,7 @@ export default function StudyCard(props) {
       fetch(`/api/ratings/${id}`, { method: 'GET'})
         .then((response) => response.ok && response.json())
         .then((ratings) => {
-          setRatingState(ratings);
+          
         });
     }, [id]);
 
@@ -54,6 +54,7 @@ export default function StudyCard(props) {
     fetch(`/api/ratings/${id}`, { method: 'GET'})
       .then((response) => response.ok && response.json())
       .then((ratings) => {
+        setRatingState(ratings);
         setRatingLen(ratings.length);
       });
   }, [id]);
