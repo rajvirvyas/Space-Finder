@@ -18,7 +18,7 @@ function getRandomItems(array) {
 }
 
 async function main() {
-  for (let i = 1; i < 7; i++) {
+  for (let i = 8; i < 15; i++) {
     const user = await prisma.user.create({
       data: {
         id: i,

@@ -11,8 +11,10 @@ import TextField from '@mui/material/TextField';
 import { Box, Button, IconButton } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { useSession } from 'next-auth/react';
 
 export default function Comments() {
+    const { data: session, status } = useSession();
     const [comments, setComments] = useState([]);
     const [commentText, setCommentText] = useState('');
 
@@ -116,9 +118,13 @@ export default function Comments() {
           value={commentText}
           onChange={handleCommentChange}
         />
+        {status === "authenticated"?
         <Button variant="contained" onClick={handleCommentSubmit}>
           Submit
-        </Button>
+        </Button> :
+        <Button disabled variant="contained" onClick={handleCommentSubmit}>
+        Submit
+      </Button>}
       </Box>
     </>
   );

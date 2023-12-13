@@ -19,8 +19,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Alert from '@mui/material/Alert';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 export default function StudyCard(props) {
+    const { data: session, status } = useSession();
     const { id, studyName, saved, distance, liveStatus, amenities, image } = props;
     const [isStarred, setIsStarred] = useState(saved);
     const [isFlagged, setIsFlagged] = useState(false);
@@ -216,13 +218,14 @@ export default function StudyCard(props) {
                 {distance} miles away
               </Typography>
             </Box>
+            {status === "authenticated" ? 
             <Button
               onClick={handleMenuClick}
               sx={{ color: 'black', ':hover': { bgcolor: 'gray' } }}
               size="small"
             >
               . . .
-            </Button>
+            </Button> : <></>}
             <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
