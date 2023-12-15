@@ -1,11 +1,23 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import FlagIcon from '@mui/icons-material/Warning';
+import WifiIcon from '@mui/icons-material/Wifi'
+import CoffeeIcon from '@mui/icons-material/FreeBreakfast';
+import PrinterIcon from '@mui/icons-material/Print';
+import PenIcon from '@mui/icons-material/Create';
+import ProjectIcon from '@mui/icons-material/Videocam';
+import MicrowaveIcon from '@mui/icons-material/Microwave';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import ParkingIcon from '@mui/icons-material/DirectionsCar';
+import BikeIcon from '@mui/icons-material/PedalBike';
+import BathroomIcon from '@mui/icons-material/Wc';
+import KitchenIcon from '@mui/icons-material/Restaurant';
+import VendingIcon from '@mui/icons-material/Fastfood';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Box, List, ListItem, Menu, MenuItem } from '@mui/material';
+import { Box, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import CardMedia from '@mui/material/CardMedia';
 import { useState, useEffect } from 'react';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
@@ -23,7 +35,7 @@ import { useSession } from 'next-auth/react';
 
 export default function StudyCard(props) {
     const { data: session, status } = useSession();
-    const { id, studyName, saved, distance, liveStatus, amenities, image } = props;
+    const { id, studyName, saved, liveStatus, distance, amenities, image } = props;
     const [isStarred, setIsStarred] = useState(saved);
     const [isFlagged, setIsFlagged] = useState(false);
     const [open, setOpen] = useState(false);
@@ -35,6 +47,8 @@ export default function StudyCard(props) {
     const [name, setName] = useState('');
     const [spotName, setSpotName] = useState('');
     const [checkedIn, setCheckedIn] = useState(false); 
+    const [liveStatusState, setLiveStatus] = useState(liveStatus);
+    const [capacity, setCapacity] = useState(0);
     const [reason, setReason] = useState('');
     const [ error, setError ] = useState(false);
     const [ratingReason, setRatingReason] = useState('');
@@ -49,13 +63,24 @@ export default function StudyCard(props) {
         });
     }, [id]);
 
+    useEffect(() => {
+      fetch(`/api/reservation/${id}`,{method: 'GET'})
+        .then((response) => response.ok && response.json())
+        .then((checkins) => {
+          setCheckedIn(checkins.length);
+          updateLiveStatus(checkins.length);
+        });
+    }, [id]);
+
   useEffect(() => {
     fetch(`/api/study-spaces/${id}`, { method: 'GET'})
       .then((response) => response.ok && response.json())
       .then((space) => {
         setRatingNum(space.avgRating);
         setIsFlagged(space.flagged);
+        setCapacity(space.capacity);
       });
+
     fetch(`/api/ratings/${id}`, { method: 'GET'})
       .then((response) => response.ok && response.json())
       .then((ratings) => {
@@ -105,6 +130,23 @@ export default function StudyCard(props) {
   
     const handleMenuClose = () => {
       setAnchorEl(null);
+    };
+
+    const updateLiveStatus = (checkinCount) => {
+      let newLiveStatus;
+      const busyness = Math.round((checkinCount/capacity) * 5);
+      
+
+      if (busyness == 5) {
+        newLiveStatus = 'Full';
+      } else if (busyness == 4) {
+        newLiveStatus = 'Very Busy';
+      } else if (busyness >= 3) {
+        newLiveStatus = 'Somewhat Busy'
+      } else {
+        newLiveStatus = 'Not Busy';
+      }
+      setLiveStatus(newLiveStatus);
     };
 
     const handleCheckIn = () => {
@@ -231,9 +273,26 @@ export default function StudyCard(props) {
       setFormState({});
     };
 
+    const AmenitySymbols = {
+      'Wifi': <WifiIcon />,
+      'Coffee': <CoffeeIcon />,
+      'Printer': <PrinterIcon />,
+      'Whiteboard': <PenIcon />,
+      'Projector': <ProjectIcon />,
+      'Kitchen': <KitchenIcon />,
+      'Parking': <ParkingIcon />,
+      'Bike Rack': <BikeIcon />,
+      'Bathroom': <BathroomIcon />,
+      'Water Fountain': <WaterDropIcon />,
+      'Microwave': <MicrowaveIcon />,
+      'Vending Machine': <VendingIcon />,
+    };
+
     function handleClose() {
       setOpen(false);
     }
+
+  
 
   return (
     <Card
@@ -384,29 +443,37 @@ export default function StudyCard(props) {
         {/* -------------------------------- */}
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <Typography sx={{ mt: 1.5 }} color="text.secondary">
-              Live Status: {liveStatus}
+            <Typography sx={{ mt: 1.5, color: liveStatusState === 'Full' ? 'red' : (liveStatusState === 'Moderate' ? 'orange' : 'green'), fontFamily: 'Lucida Grande', fontWeight: 'bold', fontSize: 20 }}>
+                {liveStatusState}
             </Typography>
+
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row'}}>
-                      <Typography sx={{mt:1.5}} color="text.secondary">
+                      <Typography sx={{mt:1.5 ,color: "text.secondary", fontFamily: 'Lucida Grande'}}>
                           Rating: {ratingNum}
                           {` (${ratingLen} ratings)`}
                       </Typography>
           </Box>
           <Box>
-            <Typography sx={{ mt: 1.5 }} color="text.secondary">
+          <Typography sx={{mt:1.5 ,color: "text.secondary", fontFamily: 'Lucida Grande'}}>
               Included Amenities:
-            </Typography>
+            </Typography >
             <List>
               {amenities.slice(0, 3).map((amenity, index) => (
                 <ListItem key={index}>
-                  - {amenity || '-'}
+                  <ListItemIcon>
+                      {AmenitySymbols[amenity] || <span>-</span>}
+                  </ListItemIcon> 
+                  <ListItemText>
+                    <Typography sx={{color: "text.primary", fontFamily: "Lucida Grande"}}>
+                        {amenity || '-'}
+                    </Typography>
+                    </ListItemText> 
                 </ListItem>
               ))}
               {amenities.length < 3 && Array.from({ length: 3 - amenities.length }).map((_, index) => (
                 <ListItem key={index + amenities.length}>
-                  -
+                  <ListItemIcon><span>-</span></ListItemIcon>
                 </ListItem>
               ))}
             </List>
