@@ -44,6 +44,7 @@ function StudySpot(props) {
     const [spot, setSpot] = useState({});
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [map, setMap] = React.useState(null)
+    const [users, setUsers] = useState([]);
     const [ratingState, setRatingState] = useState([]);
     const [ratingNum, setRatingNum] = useState(0);
     const [amenities, setAmenities] = useState([]);
@@ -71,9 +72,21 @@ function StudySpot(props) {
                 setRatingState(ratings);
                 setRatingLen(ratings.length);
                 setRatings(ratings);
-            });
-          });
-      }, []);
+                const newUsers = [];
+                for (const review in ratings) {
+                  fetch(`/api/users/${ratings[review].userId}`, {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    }})
+                    .then((res) => res.json())
+                    .then((data) => {
+                      newUsers.push({ind: review, name: data.username});
+                      setUsers(newUsers);
+                    })
+                }
+            })
+      })}, []);
 
     const onLoad = React.useCallback(function callback(map) {
         const bounds = new window.google.maps.LatLngBounds(center);
@@ -428,7 +441,7 @@ function StudySpot(props) {
               <Typography variant="h4" component="h3">
                 Comments
               </Typography>
-              <Comments reviews={ratings}/>
+              {ratings.length > 0 ? <Comments users={users} reviews={ratings}/> : <Typography>No Ratings Yet</Typography>}
             </Box>
           </Paper>
         </Grid>
