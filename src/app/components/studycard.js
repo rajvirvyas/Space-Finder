@@ -35,9 +35,10 @@ import { useSession } from 'next-auth/react';
 
 export default function StudyCard(props) {
     const { data: session, status } = useSession();
-    const { id, studyName, saved, liveStatus, distance, amenities, image } = props;
+    const { id, studyName, saved, distance, amenities, image } = props;
     const [isStarred, setIsStarred] = useState(saved);
     const [isFlagged, setIsFlagged] = useState(false);
+    const [checkIns, setCheckIns] = useState();
     const [open, setOpen] = useState(false);
     const [ratingState, setRatingState] = useState([]);
     const [ratingNum, setRatingNum] = useState(0);
@@ -47,14 +48,13 @@ export default function StudyCard(props) {
     const [name, setName] = useState('');
     const [spotName, setSpotName] = useState('');
     const [checkedIn, setCheckedIn] = useState(false); 
+    const [liveStatus, setLiveStatus] = useState('Not Busy');
     const [capacity, setCapacity] = useState(0);
     const [reason, setReason] = useState('');
     const [ error, setError ] = useState(false);
     const [ratingReason, setRatingReason] = useState('');
     const [ratingModalOpen, setRatingModalOpen] = useState(false);
     const router = useRouter();
-
-    console.log(liveStatus)
 
     useEffect(() => {
       fetch(`/api/ratings/${id}`, { method: 'GET'})
@@ -65,10 +65,10 @@ export default function StudyCard(props) {
     }, [id]);
 
     useEffect(() => {
-      fetch(`/api/reservation/${id}`,{method: 'GET'})
+      fetch(`/api/reservations/${id}`,{method: 'GET'})
         .then((response) => response.ok && response.json())
-        .then((checkins) => {
-          setCheckedIn(checkins.length);
+        .then((numReservations) => {
+          setCheckIns(numReservations.length);
         });
     }, [id]);
 
@@ -175,8 +175,11 @@ export default function StudyCard(props) {
             console.log(error);
           });
           displayCheckInMessage(); 
+          setCheckIns(checkIns + 1);
+          updateBusyness();
         }
       });
+
     };
 
     const displayAlreadyCheckedInMessage = () => {
@@ -186,7 +189,7 @@ export default function StudyCard(props) {
     const displayCheckInMessage = () => {
       alert('Yay! You\'ve checked in. You have reserved this spot for an hour. If you would like to study here longer, please check in again later.');
     };
-    
+
     const handleRatingChange = async () => {
       try {
         if (ratingReason && ratingReason.length !== 0) {
@@ -241,7 +244,34 @@ export default function StudyCard(props) {
         
       }
     };
+	
+    const updateBusyness = () => {
 
+      const busyness = (checkIns/capacity) * 5;
+
+      fetch(`/api/study-spaces/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          busyness: busyness,
+        }),
+      });
+
+
+      let newLiveStatus;
+      const roundedBusyness = Math.round(busyness);
+          
+      if (roundedBusyness >= 4) {
+        newLiveStatus = 'Very Busy';
+      } else if (roundedBusyness >= 3) {
+        newLiveStatus = 'Somewhat Busy'
+      } else {
+        newLiveStatus = 'Not Busy';
+      }
+
+      setLiveStatus(newLiveStatus);
+        
+    };
+    
     const handleRatingOpen = (event, newValue) => {
       setRatingNum(newValue);
       setRatingModalOpen(true);
@@ -426,10 +456,9 @@ export default function StudyCard(props) {
         {/* -------------------------------- */}
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <Typography sx={{ color: liveStatus >= 4 ? 'red' : (liveStatus >= 2 ? 'orange' : 'green'), fontFamily: 'Lucida Grande', fontWeight: 'bold', fontSize: 14 }}>
-                {liveStatus >= 4 ? 'Full' : (liveStatus >= 2 ? 'Somewhat Busy' : 'Not Busy')}
+            <Typography sx={{ color: liveStatus === "Somewhat Busy" ? 'orange' : (liveStatus === "Not Busy" ? 'green' : "red"), fontFamily: 'Lucida Grande', fontWeight: 'bold', fontSize: 14 }}>
+                {liveStatus}
             </Typography>
-
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row'}}>
                       <Typography sx={{mt:1.5 ,color: "text.secondary", fontFamily: 'Lucida Grande'}}>

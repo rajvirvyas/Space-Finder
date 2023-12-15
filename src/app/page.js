@@ -129,11 +129,14 @@ export default function Home() {
         onProxChange={onProxChange} onCapChange={onCapChange} onAmenitiesChange={onAmenitiesChange}/>
         <Box sx={{ display: "flex", justifyContent: 'space-evenly', flexWrap: 'wrap', alignItems: 'center',
                     overflow: 'scroll', maxHeight: '100vh' }}>
-          {studies.map((study, index) => (
-            <StudyCard key={index} id={study.id} studyName={study.name} saved={saved.includes(study.id)}
-            distance={getDistance(location.lat, location.lng, study.latitude, study.longitude).toFixed(2)}
-            liveStatus={Math.floor((study.busyness / study.capacity) * 5)} rating={study.avgRating} amenities={study.amenities} image={study.img} />
-          ))}
+          {studies.map((study, index) => {
+
+            return (
+              <StudyCard key={index} id={study.id} studyName={study.name} saved={saved.includes(study.id)}
+              distance={getDistance(location.lat, location.lng, study.latitude, study.longitude).toFixed(2)}
+              liveStatus={Math.floor((study.busyness / study.capacity) * 5)} rating={study.avgRating} amenities={study.amenities} image={study.img} />
+            )
+          })}
         </Box>
       </Box>
     </>
