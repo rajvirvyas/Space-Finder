@@ -16,10 +16,16 @@ npm install
 
 Next, make sure you modify the .env file to have the correct information for database connection. 
 
-Make sure the database is migrated. 
+Make sure the database is migrated and the seed is ran.
 
 ```bash
 npx prisma migrate dev
+```
+
+If the seed is not run properly (doesn't say 'The seed command has been executed'), then run the following line:
+
+```bash
+npx prisma db seed
 ```
 
 Finally, run the development server:
