@@ -36,6 +36,8 @@ export default function StudyCard(props) {
     const [spotName, setSpotName] = useState('');
     const [reason, setReason] = useState('');
     const [ error, setError ] = useState(false);
+    const [ratingReason, setRatingReason] = useState('');
+    const [ratingModalOpen, setRatingModalOpen] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -112,54 +114,68 @@ export default function StudyCard(props) {
       alert('Yay! You\'ve checked in.');
     };
     
-    const handleRatingChange = async (event, newValue) => {
+    const handleRatingChange = async () => {
       try {
-        let response = await fetch('/api/ratings', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            studySpaceID: id,
-            value: newValue,
-          }),
-        });
-
-        if (response.ok) {
-          const responseData = await response.json();
-          const updatedRatings = ratingState.map((rating) => {
-            if (rating.userId === responseData.userId) {
-              return { ...rating, value: responseData.value };
-            }
-            return rating;
-          });
-
-          if (!updatedRatings.some((rating) => rating.userId === responseData.userId)) {
-            updatedRatings.push({ userId: responseData.userId, value: responseData.value });
-          }
-
-          let ratingNum = updatedRatings.length === 0 ? 0 : (updatedRatings.map(obj => obj.value).reduce((a, b) => a + b, 0) / updatedRatings.length).toFixed(1)
-          response = await fetch(`/api/study-spaces/avg-rating/${id}`, {
+        if (ratingReason && ratingReason.length !== 0) {
+          let response = await fetch('/api/ratings', {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              studyID: id,
-              avgRating: ratingNum,
+              studySpaceID: id,
+              value: ratingNum,
+              comment: ratingReason,
             }),
           });
-
-          setRatingLen(updatedRatings.length);
-          setRatingState(updatedRatings);
-          setRatingNum(ratingNum);
+  
+          if (response.ok) {
+            const responseData = await response.json();
+            const updatedRatings = ratingState.map((rating) => {
+              if (rating.userId === responseData.userId) {
+                return { ...rating, value: responseData.value };
+              }
+              return rating;
+            });
+  
+            if (!updatedRatings.some((rating) => rating.userId === responseData.userId)) {
+              updatedRatings.push({ userId: responseData.userId, value: responseData.value });
+            }
+  
+            let avgRatingNum = updatedRatings.length === 0 ? 0 : (updatedRatings.map(obj => obj.value).reduce((a, b) => a + b, 0) / updatedRatings.length).toFixed(1)
+            response = await fetch(`/api/study-spaces/avg-rating/${id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                studyID: id,
+                avgRating: avgRatingNum,
+              }),
+            });
+  
+            setRatingLen(updatedRatings.length);
+            setRatingState(updatedRatings);
+            setRatingModalOpen(false);
+          } else {
+            throw new Error('Failed to update rating');
+          }
         } else {
-          throw new Error('Failed to update rating');
+          throw new Error('Please provide a reason for your rating');
         }
       } catch (error) {
         console.error(error);
         
       }
+    };
+
+    const handleRatingOpen = (event, newValue) => {
+      setRatingNum(newValue);
+      setRatingModalOpen(true);
+    };
+    
+    const handleRatingClose = () => {
+      setRatingModalOpen(false);
     };
 
     const handleReportButton = (event, newValue) => {
@@ -234,18 +250,37 @@ export default function StudyCard(props) {
               <MenuItem onClick={handleCheckIn}>Check In</MenuItem>
               <MenuItem onClick={handleMenuClose}>Rate: 
                   <Rating
-                name="rating"
-                value={ratingNum}
-                precision={0.5}
-                onChange={handleRatingChange}/>
+                    name="rating"
+                    value={ratingNum}
+                    precision={0.5}
+                    onChange={handleRatingOpen}/>
               </MenuItem>
               <MenuItem onClick={handleReportButton}>Report</MenuItem>
               </Menu>
               {/* -------------------------------- */}
                {/* <Button variant="underlined" color="inherit" onClick={handleReportButton}>Add Spot</Button> */}
+      <Dialog open={ratingModalOpen} onClose={handleRatingClose}>
+        <DialogTitle>Please Provide a Reason For Your Rating</DialogTitle>
+        <DialogContent>
+            <TextField
+              margin="dense"
+              id="reason"
+              name="reason"
+              label="Reason"
+              type="reason"
+              required
+              fullWidth
+              variant='standard'
+              onChange={e => {
+                setRatingReason(e.target.value);
+              }}/>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleRatingClose}>Cancel</Button>
+          <Button onClick={handleRatingChange}>Submit</Button>
+        </DialogActions>
+      </Dialog>
       {open && <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Report Study Spot</DialogTitle>
-        
         <DialogContent>
           <DialogContentText>
             To Report any inaccuracies, please fill in the following fields.

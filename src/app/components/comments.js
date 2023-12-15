@@ -5,6 +5,14 @@ import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
+
+import { Box } from '@mui/material';
+
+export default function Comments({ reviews }) {
+  const renderReviews = (reviewsArray) => {
+    return reviewsArray.map((review, index) => 
+    (
+
 import Typography from '@mui/material/Typography';
 import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
@@ -71,44 +79,31 @@ export default function Comments() {
 
   const renderComments = (commentsArray) => {
     return commentsArray.map((comment, index) => (
+
       <>
-        <ListItem alignItems="flex-start" key={index}>
+        <ListItem alignItems="flex-start">
           <ListItemAvatar>
-            <Avatar alt={`User${index + 1}`} src={`/static/images/avatar/${index + 1}.jpg`} />
+            <Avatar alt={`User${review.userId + 1}`} src={`/static/images/avatar/${review.userId + 1}.jpg`} />
           </ListItemAvatar>
           <ListItemText
-            primary={comment.text}
-            secondary={`— User ${index + 1} | Rating: ${comment.rating}`}
+            primary={review.comment}
+            secondary={`— User ${review.userId + 1} | Rating: ${review.value}`}
           />
-          <IconButton
-            aria-label="upvote"
-            onClick={() => handleVote(index, 'up')}
-            color={comment.voted === 'up' ? 'primary' : 'default'}
-          >
-            <ThumbUpIcon />
-          </IconButton>
-          <IconButton
-            aria-label="downvote"
-            onClick={() => handleVote(index, 'down')}
-            color={comment.voted === 'down' ? 'primary' : 'default'}
-          >
-            <ThumbDownIcon />
-          </IconButton>
         </ListItem>
         <Divider variant="inset" component="li" />
       </>
     ));
-  };
-  
+  }
 
   return (
     <>
       <Box component="span" display="flex" flexDirection="column">
         <Box component="span" m={1}>
           <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-            {renderComments(comments)}
+            {renderReviews(reviews)}
           </List>
         </Box>
+
         <TextField
           id="standard-textarea"
           label="Add a Comment"
@@ -125,6 +120,7 @@ export default function Comments() {
         <Button disabled variant="contained" onClick={handleCommentSubmit}>
         Submit
       </Button>}
+
       </Box>
     </>
   );

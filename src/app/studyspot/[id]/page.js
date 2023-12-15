@@ -47,6 +47,9 @@ function StudySpot(props) {
     const [ratingNum, setRatingNum] = useState(0);
     const [amenities, setAmenities] = useState([]);
     const [ratingLen, setRatingLen] = useState(0);
+    const [ratings, setRatings] = useState([]);
+    const [ratingReason, setRatingReason] = useState('');
+    const [ratingModalOpen, setRatingModalOpen] = useState(false);
     const [center, setCenter] = React.useState({
         lat: 35.305,
         lng: -120.6625
@@ -65,6 +68,7 @@ function StudySpot(props) {
               .then((ratings) => {
                 setRatingState(ratings);
                 setRatingLen(ratings.length);
+                setRatings(ratings);
             });
           });
       }, []);
@@ -79,6 +83,15 @@ function StudySpot(props) {
     const onUnmount = React.useCallback(function callback(map) {
         setMap(null)
     }, [])  
+
+    const handleRatingOpen = (event, newValue) => {
+      setRatingNum(newValue);
+      setRatingModalOpen(true);
+    };
+    
+    const handleRatingClose = () => {
+      setRatingModalOpen(false);
+    };
 
     function flagSpot() {
 
@@ -115,6 +128,30 @@ function StudySpot(props) {
         setAnchorEl(null); // Close the menu when "Check In" is clicked
         displayCheckInMessage(); // Function to display a pop-up message
       };
+
+      const getRatingDialog = () => {
+        return (<Dialog open={ratingModalOpen} onClose={handleRatingClose}>
+          <DialogTitle>Please Provide a Reason For Your Rating</DialogTitle>
+          <DialogContent>
+              <TextField
+                margin="dense"
+                id="reason"
+                name="reason"
+                label="Reason"
+                type="reason"
+                required
+                fullWidth
+                variant='standard'
+                onChange={e => {
+                  setRatingReason(e.target.value);
+                }}/>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleRatingClose}>Cancel</Button>
+            <Button onClick={handleRatingChange}>Submit</Button>
+          </DialogActions>
+        </Dialog>);
+      }
 
       const getReportDialog = () => {
         return (<Dialog open={reportOpen} onClose={() => setReportOpen(false)}>
@@ -181,57 +218,66 @@ function StudySpot(props) {
       const displayFlaggedSpotMessage = () => {
         alert('This spot has been flagged, sorry for the inconvenience.');
       }
-      
-      const handleRatingChange = async (event, newValue) => {
+          
+      const handleRatingChange = async () => {
         try {
-          // Send a request to your backend to update the rating
-          let response = await fetch('/api/ratings', {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              studySpaceID: spot.id,
-              value: newValue,
-            }),
-          });
-  
-          if (response.ok) {
-            const responseData = await response.json();
-            const updatedRatings = ratingState.map((rating) => {
-              if (rating.userId === responseData.userId) {
-                return { ...rating, value: responseData.value };
-              }
-              return rating;
-            });
-  
-            if (!updatedRatings.some((rating) => rating.userId === responseData.userId)) {
-              updatedRatings.push({ userId: responseData.userId, value: responseData.value });
-            }
-  
-            let ratingNum = updatedRatings.length === 0 ? 0 : (updatedRatings.map(obj => obj.value).reduce((a, b) => a + b, 0) / updatedRatings.length).toFixed(1)
-            response = await fetch(`/api/study-spaces/avg-rating/${spot.id}`, {
+          if (ratingReason && ratingReason.length !== 0) {
+            let response = await fetch('/api/ratings', {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                studyID: spot.id,
-                avgRating: ratingNum,
+                studySpaceID: spot.id,
+                value: ratingNum,
+                comment: ratingReason,
               }),
             });
-  
-            setRatingLen(updatedRatings.length);
-            setRatingState(updatedRatings);
-            setRatingNum(ratingNum);
+    
+            if (response.ok) {
+              const responseData = await response.json();
+              const updatedRatings = ratingState.map((rating) => {
+                if (rating.userId === responseData.userId) {
+                  return { ...rating, value: responseData.value };
+                }
+                return rating;
+              });
+    
+              if (!updatedRatings.some((rating) => rating.userId === responseData.userId)) {
+                updatedRatings.push({ userId: responseData.userId, value: responseData.value });
+              }
+    
+              let avgRatingNum = updatedRatings.length === 0 ? 0 : (updatedRatings.map(obj => obj.value).reduce((a, b) => a + b, 0) / updatedRatings.length).toFixed(1)
+              response = await fetch(`/api/study-spaces/avg-rating/${spot.id}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  studyID: spot.id,
+                  avgRating: avgRatingNum,
+                }),
+              });
+    
+              setRatingLen(updatedRatings.length);
+              setRatingState(updatedRatings);
+              setRatingModalOpen(false);
+
+              fetch(`/api/ratings/${params.id}`, { method: 'GET'})
+              .then((response) => response.ok && response.json())
+              .then((ratings) => {
+                setRatings(ratings);
+            });
+            } else {
+              throw new Error('Failed to update rating');
+            }
           } else {
-            throw new Error('Failed to update rating');
+            throw new Error('Please provide a reason for your rating');
           }
         } catch (error) {
           console.error(error);
-          // Handle the error here, e.g. display an error message to the user
         }
-      };
+      }
 
   return (
     <Box p={2}>
@@ -270,13 +316,14 @@ function StudySpot(props) {
               <MenuItem onClick={handleCheckIn}>Check In</MenuItem>
               <Box sx={{display: "flex", flexDirection: "column", mt: 2}}>
                 <Typography>Rate: 
-                  <Rating precision={0.5} onChange={handleRatingChange}/>
+                  <Rating precision={0.5} onChange={handleRatingOpen}/>
                 </Typography>
                 <Typography sx={{mx: "auto"}} color="text.secondary">
                   {ratingNum} {` (${ratingLen} ratings)`}
                 </Typography>
               </Box>
               <MenuItem onClick={() => setReportOpen(true)}>Report</MenuItem>
+              {ratingModalOpen && getRatingDialog()}
               {reportOpen && getReportDialog()}
                 </Box>
               ) : (
@@ -330,7 +377,7 @@ function StudySpot(props) {
               <Typography variant="h4" component="h3">
                 Comments
               </Typography>
-              <Comments />
+              <Comments reviews={ratings}/>
             </Box>
           </Paper>
         </Grid>

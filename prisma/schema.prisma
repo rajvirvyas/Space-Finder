@@ -21,7 +21,6 @@ model User {
   savedSpaces  Int[]
   studySpaces  studySpace[]
   reports      report[]
-  comments     comment[]
   reservations reservation[]
   Rating       Rating[]
 }
@@ -38,7 +37,6 @@ model studySpace {
   busyness     Float
   flagged      Boolean       @default(false)
   amenities    String[]
-  comments     comment[]
   reports      report[]
   reservations reservation[]
   img          String
@@ -53,18 +51,9 @@ model Rating {
   userId       Int
   studySpace   studySpace @relation(fields: [studySpaceId], references: [id])
   studySpaceId Int
+  comment      String     @default("")
 
   @@unique([userId, studySpaceId])
-}
-
-model comment {
-  id           Int        @id @default(autoincrement())
-  text         String
-  owner        User       @relation(fields: [ownerId], references: [id])
-  ownerId      Int
-  studySpace   studySpace @relation(fields: [studySpaceId], references: [id])
-  studySpaceId Int
-  votes Int
 }
 
 model reservation {
