@@ -20,6 +20,11 @@ export default function Home() {
     setStudies(newStudies);
   }
 
+  function onBusyChange(event) {
+    let newStudies = dbStudies.filter((study) => Math.floor((study.busyness / study.capacity) * 5) >= event.target.value);
+    setStudies(newStudies);
+  }
+
   function onCapChange(event) {
     let newStudies = dbStudies.filter((study) => study.capacity >= event.target.value);
     setStudies(newStudies);
@@ -120,14 +125,14 @@ export default function Home() {
     <>
       <Box sx={{ display: 'flex', justifyContent: "space-between", p: 1 }}>
         <Filter search={search} rating={rating} 
-        onSearchChange={onSearchChange} onRatingChange={onRatingChange}
+        onSearchChange={onSearchChange} onRatingChange={onRatingChange} onBusyChange={onBusyChange}
         onProxChange={onProxChange} onCapChange={onCapChange} onAmenitiesChange={onAmenitiesChange}/>
         <Box sx={{ display: "flex", justifyContent: 'space-evenly', flexWrap: 'wrap', alignItems: 'center',
                     overflow: 'scroll', maxHeight: '100vh' }}>
           {studies.map((study, index) => (
             <StudyCard key={index} id={study.id} studyName={study.name} saved={saved.includes(study.id)}
             distance={getDistance(location.lat, location.lng, study.latitude, study.longitude).toFixed(2)}
-            liveStatus={study.liveStatus} rating={study.avgRating} amenities={study.amenities} image={study.img} />
+            liveStatus={Math.floor((study.busyness / study.capacity) * 5)} rating={study.avgRating} amenities={study.amenities} image={study.img} />
           ))}
         </Box>
       </Box>

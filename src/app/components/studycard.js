@@ -47,13 +47,14 @@ export default function StudyCard(props) {
     const [name, setName] = useState('');
     const [spotName, setSpotName] = useState('');
     const [checkedIn, setCheckedIn] = useState(false); 
-    const [liveStatusState, setLiveStatus] = useState(liveStatus);
     const [capacity, setCapacity] = useState(0);
     const [reason, setReason] = useState('');
     const [ error, setError ] = useState(false);
     const [ratingReason, setRatingReason] = useState('');
     const [ratingModalOpen, setRatingModalOpen] = useState(false);
     const router = useRouter();
+
+    console.log(liveStatus)
 
     useEffect(() => {
       fetch(`/api/ratings/${id}`, { method: 'GET'})
@@ -68,7 +69,6 @@ export default function StudyCard(props) {
         .then((response) => response.ok && response.json())
         .then((checkins) => {
           setCheckedIn(checkins.length);
-          updateLiveStatus(checkins.length);
         });
     }, [id]);
 
@@ -130,23 +130,6 @@ export default function StudyCard(props) {
   
     const handleMenuClose = () => {
       setAnchorEl(null);
-    };
-
-    const updateLiveStatus = (checkinCount) => {
-      let newLiveStatus;
-      const busyness = Math.round((checkinCount/capacity) * 5);
-      
-
-      if (busyness == 5) {
-        newLiveStatus = 'Full';
-      } else if (busyness == 4) {
-        newLiveStatus = 'Very Busy';
-      } else if (busyness >= 3) {
-        newLiveStatus = 'Somewhat Busy'
-      } else {
-        newLiveStatus = 'Not Busy';
-      }
-      setLiveStatus(newLiveStatus);
     };
 
     const handleCheckIn = () => {
@@ -443,8 +426,8 @@ export default function StudyCard(props) {
         {/* -------------------------------- */}
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <Typography sx={{ mt: 1.5, color: liveStatusState === 'Full' ? 'red' : (liveStatusState === 'Moderate' ? 'orange' : 'green'), fontFamily: 'Lucida Grande', fontWeight: 'bold', fontSize: 20 }}>
-                {liveStatusState}
+            <Typography sx={{ color: liveStatus >= 4 ? 'red' : (liveStatus >= 2 ? 'orange' : 'green'), fontFamily: 'Lucida Grande', fontWeight: 'bold', fontSize: 14 }}>
+                {liveStatus >= 4 ? 'Full' : (liveStatus >= 2 ? 'Somewhat Busy' : 'Not Busy')}
             </Typography>
 
           </Box>
