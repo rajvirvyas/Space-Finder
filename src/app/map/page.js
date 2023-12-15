@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Box, Typography } from '@mui/material';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
+import { useRouter } from 'next/navigation';
 
 function Map() {
+    const router = useRouter();
     const [selectedSpot, setSelectedSpot] = useState(null);
     const [studySpots, setStudySpots] = useState([]);
     const { isLoaded } = useJsApiLoader({
@@ -93,7 +95,9 @@ function Map() {
                 <Marker onClick={() => toggleOpen(spot)} key={spot.id} position={{ lat: spot.latitude, lng: spot.longitude }} title={spot.name}>
                     {selectedSpot === spot && <InfoWindow onCloseClick={() => toggleOpen(null)}>
                         <Box>
-                            <Typography>{spot.name}</Typography>
+                            <Typography onClick={() => {router.push(`/studyspot/${spot.id}`)}}>
+                                {spot.name}
+                            </Typography>
                             <Typography>Lat: {spot.latitude.toFixed(2)}, Long: {spot.longitude.toFixed(2)}</Typography>
                         </Box>
                     </InfoWindow>}

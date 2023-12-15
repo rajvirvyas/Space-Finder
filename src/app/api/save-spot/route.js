@@ -39,7 +39,6 @@ export async function PUT(request) {
             } else {
                 newSavedSpaces = [...user.savedSpaces, studySpotId];
             }
-            console.log(newSavedSpaces)
             const updatedUser = await prisma.User.update({
                 where: {
                     id: loggedInData.user?.id,

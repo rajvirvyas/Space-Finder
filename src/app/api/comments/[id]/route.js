@@ -7,7 +7,6 @@ export async function PUT(request, { params }) {
   const id = parseInt(params.id);
   if (loggedInData.loggedIn && id) {
     const { text, votes } = await request.json();
-    console.log("finding", {id, text, ownerId: loggedInData.user.id});
     try {
       const cmnt = await prisma.comment.update({
         where: {
