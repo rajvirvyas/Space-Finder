@@ -3,13 +3,19 @@ import React, { useState } from 'react';
 
 export default function Filter(props) {
     const { search, rating, onSearchChange, onRatingChange, 
-        onProxChange, onCapChange, onAmenitiesChange } = props;
+        onProxChange, onCapChange, onAmenitiesChange,  } = props;
     const [amenities, setAmenities] = useState([]);
+
+    
 
     const handleAmenitiesChange = (event) => {
         setAmenities(event.target.value);
         onAmenitiesChange(event.target.value);
     };
+   
+
+
+  
 
     const amenitiesList = [
         'Wifi',
@@ -87,8 +93,10 @@ export default function Filter(props) {
                     defaultValue={2}
                     step={1}
                     max={5}
-                    marks={[{value: 0, label: '1'}, {value: 5, label: 'Full'}]}
+                    marks={[
+                        {value: 0, label: 'Not Busy'}, {value: 5, label: 'Full'}]}
                     valueLabelDisplay="auto"
+            
                 />   
             </Box>
             <Box sx={{ width: 0.6 }}>

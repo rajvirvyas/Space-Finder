@@ -5,12 +5,8 @@ import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import { Box, Button, IconButton } from '@mui/material';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { Box} from '@mui/material';
+
 
 
 export default function Comments({ reviews }) {
