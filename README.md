@@ -1,7 +1,7 @@
 # Update 2024
 This is a full-stack web application built for a CSC 307 project at Cal Poly. It's meant to showcase study spots on campus, and lets users register, review, bookmark, add, report and check-in to a study spot. Users can see the capacity level of the study room and locate it using Google Maps API. Managed development through weekly Agile/Kanban tasks.
 
-Demo: [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/hphR-picF58/maxresdefault.jpg)](https://www.youtube.com/watch?v=hphR-picF58)
+Demo: [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/i__IyjH_8pw/maxresdefault.jpg)](https://www.youtube.com/watch?v=i__IyjH_8pw)
 
 Developed by:
 - Rajvir Vyas (Team Lead)
